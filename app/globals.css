@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+  --gradient-purple: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --theme-primary: #00ff41;
+  --theme-primary-dim: rgba(0, 255, 65, 0.7);
+  --theme-primary-bg: rgba(0, 255, 65, 0.1);
+  --theme-border: rgba(0, 255, 65, 0.3);
+}
+
+.hero-gradient {
+  background: radial-gradient(
+    circle at 50% 0%,
+    rgba(99, 102, 241, 0.15) 0%,
+    rgba(99, 102, 241, 0.05) 30%,
+    rgba(0, 0, 0, 0) 70%
+  );
+}
+
+.dotted-grid {
+  background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.1;
+}
+
+.terminal-cursor {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.matrix-green {
+  color: var(--theme-primary);
+}
+
+.terminal-bg {
+  background: #0d1117;
+  border: 1px solid #30363d;
+}
+
+.theme-primary {
+  color: var(--theme-primary);
+}
+
+.theme-primary-dim {
+  color: var(--theme-primary-dim);
+}
+
+.theme-primary-bg {
+  background-color: var(--theme-primary-bg);
+}
+
+.theme-border {
+  border-color: var(--theme-border);
+}
