@@ -6,8 +6,8 @@ import type React from "react"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Crop Studio - Protect Your Privacy, Share What Matters",
-  description: "Advanced screen sharing and workflow optimization tool",
+  title: "Pratham Snehi - Developer Portfolio",
+  description: "Full Stack Developer & UI/UX Enthusiast",
     generator: 'v0.dev'
 }
 
@@ -18,7 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-black text-white antialiased`}>{children}</body>
+      <body
+        className={`${inter.className} antialiased dark-theme`}
+        style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}
+      >
+        {children}
+      </body>
     </html>
   )
 }

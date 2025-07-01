@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { Sun, Moon } from "lucide-react"
 
 interface ThemeToggleProps {
   onThemeChange?: (isMatrix: boolean) => void
@@ -9,60 +10,65 @@ interface ThemeToggleProps {
 export function ThemeToggle({ onThemeChange }: ThemeToggleProps) {
   const [isMatrix, setIsMatrix] = useState(true)
 
-  const handleToggle = () => {
-    const newTheme = !isMatrix
-    setIsMatrix(newTheme)
-    onThemeChange?.(newTheme)
+  useEffect(() => {
+    // Initialize theme on mount
+    updateTheme(isMatrix)
+  }, [])
 
-    // Update CSS custom properties for theme switching
+  const updateTheme = (matrix: boolean) => {
     const root = document.documentElement
-    if (newTheme) {
+    const body = document.body
+
+    if (matrix) {
+      // Matrix theme (dark background, green accents)
       root.style.setProperty("--theme-primary", "#00ff41")
       root.style.setProperty("--theme-primary-dim", "rgba(0, 255, 65, 0.7)")
       root.style.setProperty("--theme-primary-bg", "rgba(0, 255, 65, 0.1)")
-      root.style.setProperty("--theme-border", "rgba(0, 255, 65, 0.3)")
+      root.style.setProperty("--theme-border", "rgba(0, 255, 65, 0.4)")
+      root.style.setProperty("--theme-bg", "#000000")
+      root.style.setProperty("--theme-bg-secondary", "#111111")
+      root.style.setProperty("--theme-text", "#ffffff")
+      root.style.setProperty("--theme-text-secondary", "#808080")
+      body.className = body.className.replace(/\s*light-theme/g, "") + " dark-theme"
     } else {
+      // Normal theme (white background, blue accents)
       root.style.setProperty("--theme-primary", "#3b82f6")
       root.style.setProperty("--theme-primary-dim", "rgba(59, 130, 246, 0.7)")
       root.style.setProperty("--theme-primary-bg", "rgba(59, 130, 246, 0.1)")
-      root.style.setProperty("--theme-border", "rgba(59, 130, 246, 0.3)")
+      root.style.setProperty("--theme-border", "rgba(59, 130, 246, 0.4)")
+      root.style.setProperty("--theme-bg", "#ffffff")
+      root.style.setProperty("--theme-bg-secondary", "#f8fafc")
+      root.style.setProperty("--theme-text", "#1f2937")
+      root.style.setProperty("--theme-text-secondary", "#6b7280")
+      body.className = body.className.replace(/\s*dark-theme/g, "") + " light-theme"
     }
   }
 
+  const handleToggle = () => {
+    const newTheme = !isMatrix
+    setIsMatrix(newTheme)
+    updateTheme(newTheme)
+    onThemeChange?.(newTheme)
+  }
+
   return (
-    <div className="flex items-center gap-3">
-      <span className="text-xs font-mono text-gray-400">{isMatrix ? "MATRIX" : "NORMAL"}</span>
-      <button
-        onClick={handleToggle}
-        className="relative w-16 h-8 rounded-full bg-gray-800 border border-gray-600 transition-all duration-300 hover:border-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-gray-500"
-        aria-label="Toggle theme"
+    <button
+      onClick={handleToggle}
+      className="relative w-12 h-6 rounded-full transition-all duration-300 focus:outline-none"
+      style={{ backgroundColor: isMatrix ? "#1f2937" : "#e5e7eb" }}
+      aria-label="Toggle theme"
+    >
+      {/* Slider */}
+      <div
+        className={`absolute top-0.5 w-5 h-5 rounded-full transition-all duration-300 transform flex items-center justify-center ${
+          isMatrix ? "left-0.5 bg-green-500" : "left-6 bg-blue-500"
+        }`}
       >
-        {/* Track */}
-        <div className="absolute inset-1 rounded-full bg-gray-900 transition-colors duration-300" />
-
-        {/* Slider */}
-        <div
-          className={`absolute top-1 w-6 h-6 rounded-full transition-all duration-300 transform ${
-            isMatrix
-              ? "left-1 bg-green-500 shadow-lg shadow-green-500/50"
-              : "left-9 bg-blue-500 shadow-lg shadow-blue-500/50"
-          }`}
-        >
-          {/* Inner glow effect */}
-          <div
-            className={`absolute inset-0 rounded-full transition-all duration-300 ${
-              isMatrix ? "bg-green-400 animate-pulse" : "bg-blue-400 animate-pulse"
-            }`}
-            style={{ opacity: 0.6 }}
-          />
+        {/* Icon */}
+        <div className="flex items-center justify-center w-full h-full">
+          {isMatrix ? <Moon className="w-3 h-3 text-white" /> : <Sun className="w-3 h-3 text-white" />}
         </div>
-
-        {/* Icons */}
-        <div className="absolute inset-0 flex items-center justify-between px-2 text-xs">
-          <span className={`transition-opacity duration-300 ${isMatrix ? "opacity-100" : "opacity-30"}`}>{"</>"}</span>
-          <span className={`transition-opacity duration-300 ${!isMatrix ? "opacity-100" : "opacity-30"}`}>✦</span>
-        </div>
-      </button>
-    </div>
+      </div>
+    </button>
   )
 }

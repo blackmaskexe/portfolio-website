@@ -8,7 +8,11 @@
   --theme-primary: #00ff41;
   --theme-primary-dim: rgba(0, 255, 65, 0.7);
   --theme-primary-bg: rgba(0, 255, 65, 0.1);
-  --theme-border: rgba(0, 255, 65, 0.3);
+  --theme-border: rgba(0, 255, 65, 0.4);
+  --theme-bg: #000000;
+  --theme-bg-secondary: #111111;
+  --theme-text: #ffffff;
+  --theme-text-secondary: #808080;
 }
 
 .hero-gradient {
@@ -64,4 +68,42 @@
 
 .theme-border {
   border-color: var(--theme-border);
+}
+
+.theme-bg {
+  background-color: var(--theme-bg);
+}
+
+.theme-bg-secondary {
+  background-color: var(--theme-bg-secondary);
+}
+
+.theme-text {
+  color: var(--theme-text);
+}
+
+.theme-text-secondary {
+  color: var(--theme-text-secondary);
+}
+
+/* Light theme overrides */
+.light-theme {
+  background-color: var(--theme-bg) !important;
+  color: var(--theme-text) !important;
+}
+
+.light-theme .terminal-bg {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.light-theme .dotted-grid {
+  background-image: radial-gradient(circle, #000000 1px, transparent 1px);
+  opacity: 0.05;
+}
+
+/* Dark theme overrides */
+.dark-theme {
+  background-color: var(--theme-bg) !important;
+  color: var(--theme-text) !important;
 }

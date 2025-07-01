@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { TypewriterText } from "@/components/typewriter-text"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -6,8 +8,15 @@ export function Header() {
   const words = ["Snehi", "web", "ios", "android", "backend"]
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="flex items-center justify-between px-6 py-4 backdrop-blur-xl bg-black/80 border-b theme-border">
+    <header className="absolute top-4 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-6xl px-6">
+      <div
+        className="flex items-center justify-between px-8 py-4 backdrop-blur-xl rounded-full shadow-2xl border"
+        style={{
+          backgroundColor: "var(--theme-bg)",
+          borderColor: "var(--theme-border)",
+          opacity: 0.95,
+        }}
+      >
         {/* Typewriter - Fixed Width Container */}
         <div className="font-mono text-lg w-32">
           <TypewriterText words={words} typingSpeed={300} deletingSpeed={150} pauseDuration={3000} />
@@ -16,31 +25,31 @@ export function Header() {
         {/* Navigation - Separate Container */}
         <nav className="hidden md:flex items-center gap-8">
           <Link
-            href="#"
+            href="#projects"
             className="text-sm theme-primary-dim hover:text-[var(--theme-primary)] transition-colors font-mono"
           >
             Projects
           </Link>
           <Link
-            href="#"
+            href="#skills"
             className="text-sm theme-primary-dim hover:text-[var(--theme-primary)] transition-colors font-mono"
           >
             Skills
           </Link>
           <Link
-            href="#"
+            href="#experience"
             className="text-sm theme-primary-dim hover:text-[var(--theme-primary)] transition-colors font-mono"
           >
             Experience
           </Link>
           <Link
-            href="#"
+            href="#about"
             className="text-sm theme-primary-dim hover:text-[var(--theme-primary)] transition-colors font-mono"
           >
             About
           </Link>
           <Link
-            href="#"
+            href="#contact"
             className="text-sm theme-primary-dim hover:text-[var(--theme-primary)] transition-colors font-mono"
           >
             Contact
