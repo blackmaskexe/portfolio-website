@@ -2,7 +2,7 @@ import { MacOSScreen } from "@/components/macos-screen"
 
 export function ProjectsSection() {
   return (
-    <section id="projects" className="min-h-screen py-20" style={{ backgroundColor: "var(--theme-bg)" }}>
+    <section id="projects" className="py-12" style={{ backgroundColor: "var(--theme-bg)" }}>
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-4xl font-bold mb-8 theme-primary text-center">Projects</h2>
         <p className="text-center theme-text-secondary mb-12 max-w-2xl mx-auto">

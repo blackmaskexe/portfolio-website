@@ -16,15 +16,12 @@ export function HeroSection() {
   ]
 
   return (
-    <section
-      className="relative min-h-screen pt-32 pb-16 overflow-hidden"
-      style={{ backgroundColor: "var(--theme-bg)" }}
-    >
+    <section className="relative min-h-screen pt-32 overflow-hidden" style={{ backgroundColor: "var(--theme-bg)" }}>
       <InteractiveGrid containerClassName="absolute inset-0" className="opacity-20" points={40} />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         {/* Hero Content - Split Layout */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-8rem)]">
           {/* Left Side - Text and Buttons */}
           <div className="text-left">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight theme-primary">{"Pratham Snehi"}</h1>
