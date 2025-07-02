@@ -1,4 +1,4 @@
-import { MacbookScroll } from "@/components/ui/macbook-scroll"
+import { MacOSScreen } from "@/components/macos-screen"
 
 export function ProjectsSection() {
   return (
@@ -6,37 +6,21 @@ export function ProjectsSection() {
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-4xl font-bold mb-8 theme-primary text-center">Projects</h2>
         <p className="text-center theme-text-secondary mb-12 max-w-2xl mx-auto">
-          Here are some of my featured projects showcasing modern web development and design.
+          Here's a glimpse into my development environment and the projects I work on daily.
         </p>
 
-        {/* MacBook Scroll Component */}
-        <MacbookScroll
-          title={
-            <span className="theme-primary">
-              Featured Project Showcase <br />
-              <span className="theme-text-secondary text-xl">Interactive MacBook Experience</span>
-            </span>
-          }
-          src="/placeholder.svg?height=600&width=800"
-          showGradient
-        />
+        {/* macOS Screen Component */}
+        <div className="flex justify-center">
+          <MacOSScreen className="max-w-4xl w-full" />
+        </div>
 
-        {/* Additional Project Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-20">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="bg-gray-800/50 rounded-lg p-6 border border-gray-700 hover:border-[var(--theme-border)] transition-colors"
-            >
-              <div className="w-full h-48 bg-gray-700 rounded-lg mb-4"></div>
-              <h3 className="text-xl font-semibold mb-2 theme-text">Project {i + 1}</h3>
-              <p className="theme-text-secondary">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-              <div className="mt-4 flex gap-2">
-                <span className="px-2 py-1 text-xs rounded theme-primary-bg theme-primary">React</span>
-                <span className="px-2 py-1 text-xs rounded theme-primary-bg theme-primary">TypeScript</span>
-              </div>
-            </div>
-          ))}
+        {/* Additional Info */}
+        <div className="mt-16 text-center">
+          <h3 className="text-2xl font-semibold mb-4 theme-text">Development Environment</h3>
+          <p className="theme-text-secondary max-w-3xl mx-auto">
+            I work primarily on macOS using modern development tools and frameworks. My setup includes VS Code,
+            Terminal, and various productivity apps that help me build efficient and scalable applications.
+          </p>
         </div>
       </div>
     </section>
