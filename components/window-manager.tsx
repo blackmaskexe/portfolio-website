@@ -6,6 +6,7 @@ import { useState } from "react"
 import { X, Minus, Square } from "lucide-react"
 import type { AppWindow } from "./desktop"
 import { AppContent } from "./app-content"
+import { AppOpeningAnimation } from "./app-opening-animation"
 
 interface WindowManagerProps {
   windows: AppWindow[]
@@ -35,6 +36,15 @@ export function WindowManager({
     startPos: { x: 0, y: 0 },
     startWindowPos: { x: 0, y: 0 },
   })
+
+  const [openingAnimations, setOpeningAnimations] = useState<
+    Array<{
+      appId: string
+      appName: string
+      iconPosition: { x: number; y: number }
+      windowPosition: { x: number; y: number }
+    }>
+  >([])
 
   const handleMouseDown = (e: React.MouseEvent, windowId: string, windowPos: { x: number; y: number }) => {
     onBringToFront(windowId)
@@ -69,13 +79,26 @@ export function WindowManager({
 
   return (
     <div className="absolute inset-0 pt-6" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+      {/* Opening Animations */}
+      {openingAnimations.map((animation, index) => (
+        <AppOpeningAnimation
+          key={`${animation.appId}-${index}`}
+          appId={animation.appId}
+          appName={animation.appName}
+          iconPosition={animation.iconPosition}
+          windowPosition={animation.windowPosition}
+          onComplete={() => {
+            setOpeningAnimations((prev) => prev.filter((_, i) => i !== index))
+          }}
+        />
+      ))}
       {windows
         .filter((w) => !w.isMinimized)
         .sort((a, b) => a.zIndex - b.zIndex)
         .map((window) => (
           <div
             key={window.id}
-            className="absolute bg-white rounded-lg shadow-2xl overflow-hidden"
+            className="absolute bg-white rounded-lg shadow-2xl overflow-hidden window"
             style={{
               left: window.position.x,
               top: window.position.y,
@@ -87,7 +110,7 @@ export function WindowManager({
           >
             {/* Title Bar */}
             <div
-              className="h-8 bg-gray-100 border-b flex items-center justify-between px-4 cursor-move select-none"
+              className="h-8 bg-gray-100 border-b flex items-center justify-between px-4 cursor-move select-none window-titlebar"
               onMouseDown={(e) => handleMouseDown(e, window.id, window.position)}
             >
               <div className="flex items-center space-x-2">

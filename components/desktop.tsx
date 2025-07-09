@@ -7,6 +7,7 @@ import { MenuBar } from "./menu-bar"
 import { Dock } from "./dock"
 import { WindowManager } from "./window-manager"
 import { ControlCenter } from "./control-center"
+import { DesktopIcons } from "./desktop-icons"
 
 export interface AppWindow {
   id: string
@@ -27,6 +28,15 @@ export function Desktop() {
   const [selectionStart, setSelectionStart] = useState({ x: 0, y: 0 })
   const [selectionEnd, setSelectionEnd] = useState({ x: 0, y: 0 })
   const desktopRef = useRef<HTMLDivElement>(null)
+
+  const [desktopIcons] = useState([
+    { id: "finder", name: "Finder", icon: "Folder", position: { x: 50, y: 100 } },
+    { id: "safari", name: "Safari", icon: "Globe", position: { x: 50, y: 200 } },
+    { id: "music", name: "Music", icon: "MusicIcon", position: { x: 50, y: 300 } },
+    { id: "messages", name: "Messages", icon: "MessageSquare", position: { x: 150, y: 100 } },
+    { id: "system-preferences", name: "System Preferences", icon: "SettingsIcon", position: { x: 150, y: 200 } },
+    { id: "trash", name: "Trash", icon: "Trash2", position: { x: 150, y: 300 } },
+  ])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -94,14 +104,16 @@ export function Desktop() {
   }
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    // Check if we're clicking on an interactive element
+    // Check if we're clicking on an interactive element or window dragging area
     const target = e.target as HTMLElement
     const isInteractiveElement =
       target.closest("button") ||
       target.closest('[role="button"]') ||
       target.closest(".window") ||
       target.closest(".dock") ||
-      target.closest(".menu-bar")
+      target.closest(".menu-bar") ||
+      target.closest(".cursor-move") ||
+      target.classList.contains("cursor-move")
 
     // Only start selection if NOT clicking on interactive elements
     if (!isInteractiveElement) {
@@ -160,6 +172,9 @@ export function Desktop() {
           }}
         />
       )}
+
+      {/* Desktop Icons */}
+      <DesktopIcons icons={desktopIcons} onOpenApp={openApp} />
 
       {/* Menu Bar */}
       <MenuBar currentTime={currentTime} onControlCenterClick={() => setShowControlCenter(!showControlCenter)} />

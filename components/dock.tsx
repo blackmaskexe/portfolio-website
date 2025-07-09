@@ -1,21 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import {
-  Folder,
-  Grid3X3,
-  Globe,
-  Mail,
-  Calendar,
-  Camera,
-  ShoppingBag,
-  Tv,
-  Music,
-  MessageSquare,
-  Calculator,
-  Settings,
-  Trash2,
-} from "lucide-react"
+import { Folder, Grid3X3, Globe, Music, MessageSquare, Settings, Trash2 } from "lucide-react"
 import type { AppWindow } from "./desktop"
 
 interface DockProps {
@@ -28,14 +14,8 @@ const dockApps = [
   { id: "finder", name: "Finder", icon: Folder },
   { id: "launchpad", name: "Launchpad", icon: Grid3X3 },
   { id: "safari", name: "Safari", icon: Globe },
-  { id: "mail", name: "Mail", icon: Mail },
-  { id: "calendar", name: "Calendar", icon: Calendar },
-  { id: "photos", name: "Photos", icon: Camera },
-  { id: "app-store", name: "App Store", icon: ShoppingBag },
-  { id: "tv", name: "TV", icon: Tv },
   { id: "music", name: "Music", icon: Music },
   { id: "messages", name: "Messages", icon: MessageSquare },
-  { id: "calculator", name: "Calculator", icon: Calculator },
   { id: "system-preferences", name: "System Preferences", icon: Settings },
   { id: "trash", name: "Trash", icon: Trash2 },
 ]
