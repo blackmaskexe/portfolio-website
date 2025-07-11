@@ -55,10 +55,10 @@ export function MenuBar({ currentTime, onControlCenterClick }: MenuBarProps) {
               <div className="fixed inset-0 z-40" onClick={() => setShowAppleMenu(false)} />
 
               {/* Menu */}
-              <div className="absolute top-6 left-0 w-64 bg-white/20 backdrop-blur-md rounded-lg shadow-2xl border border-white/20 py-2 z-50">
+              <div className="absolute top-6 left-0 w-64 bg-gray-900/95 backdrop-blur-md rounded-lg shadow-2xl border border-gray-700/50 py-2 z-50">
                 {appleMenuItems.map((item, index) =>
                   item.type === "separator" ? (
-                    <div key={index} className="h-px bg-white/30 mx-2 my-1" />
+                    <div key={index} className="h-px bg-gray-700/60 mx-2 my-1" />
                   ) : (
                     <button
                       key={index}
@@ -66,7 +66,7 @@ export function MenuBar({ currentTime, onControlCenterClick }: MenuBarProps) {
                         item.action()
                         setShowAppleMenu(false)
                       }}
-                      className="w-full text-left px-4 py-2 text-white hover:bg-white/20 hover:text-white transition-colors"
+                      className="w-full text-left px-4 py-2 text-gray-200 hover:bg-blue-600 hover:text-white transition-colors text-sm"
                     >
                       {item.label}
                     </button>

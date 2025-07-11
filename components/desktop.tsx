@@ -29,14 +29,8 @@ export function Desktop() {
   const [selectionEnd, setSelectionEnd] = useState({ x: 0, y: 0 })
   const desktopRef = useRef<HTMLDivElement>(null)
 
-  const [desktopIcons] = useState([
-    { id: "finder", name: "Finder", icon: "Folder", position: { x: 50, y: 100 } },
-    { id: "safari", name: "Safari", icon: "Globe", position: { x: 50, y: 200 } },
-    { id: "music", name: "Music", icon: "MusicIcon", position: { x: 50, y: 300 } },
-    { id: "messages", name: "Messages", icon: "MessageSquare", position: { x: 150, y: 100 } },
-    { id: "system-preferences", name: "System Preferences", icon: "SettingsIcon", position: { x: 150, y: 200 } },
-    { id: "trash", name: "Trash", icon: "Trash2", position: { x: 150, y: 300 } },
-  ])
+  // Empty desktop icons array - no icons on desktop
+  const [desktopIcons] = useState([])
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -173,7 +167,7 @@ export function Desktop() {
         />
       )}
 
-      {/* Desktop Icons */}
+      {/* Desktop Icons - now empty */}
       <DesktopIcons icons={desktopIcons} onOpenApp={openApp} />
 
       {/* Menu Bar */}

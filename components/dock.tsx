@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Folder, Grid3X3, Globe, Music, MessageSquare, Settings, Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 import type { AppWindow } from "./desktop"
 
 interface DockProps {
@@ -11,13 +11,16 @@ interface DockProps {
 }
 
 const dockApps = [
-  { id: "finder", name: "Finder", icon: Folder },
-  { id: "launchpad", name: "Launchpad", icon: Grid3X3 },
-  { id: "safari", name: "Safari", icon: Globe },
-  { id: "music", name: "Music", icon: Music },
-  { id: "messages", name: "Messages", icon: MessageSquare },
-  { id: "system-preferences", name: "System Preferences", icon: Settings },
-  { id: "trash", name: "Trash", icon: Trash2 },
+  {
+    id: "motivation-app",
+    name: "Motivation",
+    iconPath: "/app-icons/motivation-app.png",
+  },
+  {
+    id: "habit-tracker",
+    name: "Habit Tracker",
+    iconPath: "/app-icons/habit-tracker.png",
+  },
 ]
 
 export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
@@ -43,9 +46,9 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
   return (
     <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-40">
       <div className="bg-white/20 backdrop-blur-md rounded-2xl px-3 py-2 border border-white/20">
-        <div className="flex items-end space-x-1">
+        <div className="flex items-center space-x-1">
+          {/* Regular Apps */}
           {dockApps.map((app) => {
-            const Icon = app.icon
             const isOpen = isAppOpen(app.id)
             const isMinimized = isAppMinimized(app.id)
             const isHovered = hoveredApp === app.id
@@ -57,17 +60,30 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
                   onMouseEnter={() => setHoveredApp(app.id)}
                   onMouseLeave={() => setHoveredApp(null)}
                   className={`
-                    relative p-2 rounded-xl transition-all duration-200 ease-out
-                    ${isHovered ? "transform -translate-y-2 scale-110" : ""}
-                    hover:bg-white/10
+                    relative p-1 transition-all duration-200 ease-out
+                    ${isHovered ? "scale-110" : ""}
                   `}
                 >
-                  <Icon
+                  <div
                     className={`
-                      w-12 h-12 text-white transition-all duration-200
+                      w-12 h-12 transition-all duration-200 overflow-hidden
                       ${isHovered ? "w-14 h-14" : ""}
                     `}
-                  />
+                    style={{
+                      borderRadius: "22%",
+                      background: "linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))",
+                      boxShadow: isHovered
+                        ? "0 8px 25px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)"
+                        : "0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)",
+                    }}
+                  >
+                    <img
+                      src={app.iconPath || "/placeholder.svg"}
+                      alt={app.name}
+                      className="w-full h-full object-cover"
+                      style={{ borderRadius: "20%" }}
+                    />
+                  </div>
 
                   {/* Running indicator */}
                   {(isOpen || isMinimized) && (
@@ -84,6 +100,42 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
               </div>
             )
           })}
+
+          {/* Separator */}
+          <div className="h-12 w-px bg-white/30 mx-2" />
+
+          {/* Trash */}
+          <div className="relative flex flex-col items-center">
+            <button
+              onClick={() => handleAppClick("trash", "Trash")}
+              onMouseEnter={() => setHoveredApp("trash")}
+              onMouseLeave={() => setHoveredApp(null)}
+              className={`
+                relative p-2 rounded-xl transition-all duration-200 ease-out
+                ${hoveredApp === "trash" ? "scale-110" : ""}
+                hover:bg-white/10
+              `}
+            >
+              <Trash2
+                className={`
+                  w-12 h-12 text-white transition-all duration-200
+                  ${hoveredApp === "trash" ? "w-14 h-14" : ""}
+                `}
+              />
+
+              {/* Running indicator */}
+              {(isAppOpen("trash") || isAppMinimized("trash")) && (
+                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full" />
+              )}
+            </button>
+
+            {/* Tooltip */}
+            {hoveredApp === "trash" && (
+              <div className="absolute bottom-full mb-2 px-2 py-1 bg-black/80 text-white text-xs rounded whitespace-nowrap">
+                Trash
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
