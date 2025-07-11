@@ -7,6 +7,7 @@ import { X, Minus, Square } from "lucide-react"
 import type { AppWindow } from "./desktop"
 import { AppContent } from "./app-content"
 import { AppOpeningAnimation } from "./app-opening-animation"
+import { IOSSimulatorWindow } from "./ios-simulator-window"
 
 interface WindowManagerProps {
   windows: AppWindow[]
@@ -77,6 +78,10 @@ export function WindowManager({
     })
   }
 
+  const isIOSSimulatorApp = (appId: string) => {
+    return appId === "motivation-app" || appId === "habit-tracker"
+  }
+
   return (
     <div className="absolute inset-0 pt-6" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
       {/* Opening Animations */}
@@ -95,57 +100,104 @@ export function WindowManager({
       {windows
         .filter((w) => !w.isMinimized)
         .sort((a, b) => a.zIndex - b.zIndex)
-        .map((window) => (
-          <div
-            key={window.id}
-            className="absolute bg-white rounded-lg shadow-2xl overflow-hidden window"
-            style={{
-              left: window.position.x,
-              top: window.position.y,
-              width: window.size.width,
-              height: window.size.height,
-              zIndex: window.zIndex,
-            }}
-            onClick={() => onBringToFront(window.id)}
-          >
-            {/* Title Bar */}
-            <div
-              className="h-8 bg-gray-100 border-b flex items-center justify-between px-4 cursor-move select-none window-titlebar"
-              onMouseDown={(e) => handleMouseDown(e, window.id, window.position)}
-            >
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onClose(window.id)
-                  }}
-                  className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 flex items-center justify-center"
-                >
-                  <X className="w-2 h-2 text-red-800 opacity-0 hover:opacity-100" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onMinimize(window.id)
-                  }}
-                  className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 flex items-center justify-center"
-                >
-                  <Minus className="w-2 h-2 text-yellow-800 opacity-0 hover:opacity-100" />
-                </button>
-                <button className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 flex items-center justify-center">
-                  <Square className="w-2 h-2 text-green-800 opacity-0 hover:opacity-100" />
-                </button>
-              </div>
-              <div className="text-sm font-medium text-gray-700">{window.title}</div>
-              <div className="w-12" />
-            </div>
+        .map((window) => {
+          const isSimulator = isIOSSimulatorApp(window.appId)
 
-            {/* Window Content */}
-            <div className="flex-1 overflow-hidden">
-              <AppContent appId={window.appId} />
+          return (
+            <div
+              key={window.id}
+              className={`absolute shadow-2xl overflow-hidden ${
+                isSimulator ? "bg-transparent" : "bg-white rounded-lg"
+              }`}
+              style={{
+                left: window.position.x,
+                top: window.position.y,
+                width: isSimulator ? 320 : window.size.width,
+                height: isSimulator ? 580 : window.size.height,
+                zIndex: window.zIndex,
+              }}
+              onClick={() => onBringToFront(window.id)}
+            >
+              {isSimulator ? (
+                // iOS Simulator Window (just the phone screen)
+                <div className="w-full h-full relative">
+                  {/* Invisible draggable area at the top */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-16 z-10 cursor-move"
+                    onMouseDown={(e) => handleMouseDown(e, window.id, window.position)}
+                  />
+
+                  {/* Window controls overlay */}
+                  <div className="absolute top-2 left-2 flex space-x-2 z-20">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onClose(window.id)
+                      }}
+                      className="w-4 h-4 bg-red-500 rounded-full hover:bg-red-600 flex items-center justify-center shadow-lg"
+                    >
+                      <X className="w-2.5 h-2.5 text-white" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onMinimize(window.id)
+                      }}
+                      className="w-4 h-4 bg-yellow-500 rounded-full hover:bg-yellow-600 flex items-center justify-center shadow-lg"
+                    >
+                      <Minus className="w-2.5 h-2.5 text-white" />
+                    </button>
+                    <button className="w-4 h-4 bg-green-500 rounded-full hover:bg-green-600 flex items-center justify-center shadow-lg">
+                      <Square className="w-2.5 h-2.5 text-white" />
+                    </button>
+                  </div>
+
+                  <IOSSimulatorWindow appId={window.appId} appName={window.title} />
+                </div>
+              ) : (
+                // Regular macOS Window
+                <>
+                  {/* Title Bar */}
+                  <div
+                    className="h-8 bg-gray-100 border-b flex items-center justify-between px-4 cursor-move select-none window-titlebar"
+                    onMouseDown={(e) => handleMouseDown(e, window.id, window.position)}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onClose(window.id)
+                        }}
+                        className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 flex items-center justify-center"
+                      >
+                        <X className="w-2 h-2 text-red-800 opacity-0 hover:opacity-100" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onMinimize(window.id)
+                        }}
+                        className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 flex items-center justify-center"
+                      >
+                        <Minus className="w-2 h-2 text-yellow-800 opacity-0 hover:opacity-100" />
+                      </button>
+                      <button className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-600 flex items-center justify-center">
+                        <Square className="w-2 h-2 text-green-800 opacity-0 hover:opacity-100" />
+                      </button>
+                    </div>
+                    <div className="text-sm font-medium text-gray-700">{window.title}</div>
+                    <div className="w-12" />
+                  </div>
+
+                  {/* Window Content */}
+                  <div className="flex-1 overflow-hidden">
+                    <AppContent appId={window.appId} />
+                  </div>
+                </>
+              )}
             </div>
-          </div>
-        ))}
+          )
+        })}
     </div>
   )
 }
