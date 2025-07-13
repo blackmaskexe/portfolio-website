@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Trash2 } from "lucide-react"
-import type { AppWindow } from "./desktop"
+import type { AppWindow } from "../desktop"
 
 interface DockProps {
   openWindows: AppWindow[]

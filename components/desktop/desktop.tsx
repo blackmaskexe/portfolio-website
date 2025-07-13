@@ -3,10 +3,10 @@
 import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
-import { MenuBar } from "./menu-bar"
-import { Dock } from "./dock"
-import { WindowManager } from "./window-manager"
-import { ControlCenter } from "./control-center"
+import { MenuBar } from "../menu-bar"
+import { Dock } from "../dock"
+import { WindowManager } from "../window-manager"
+import { ControlCenter } from "../control-center"
 import { DesktopIcons } from "./desktop-icons"
 
 export interface AppWindow {

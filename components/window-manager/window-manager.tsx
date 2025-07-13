@@ -4,10 +4,10 @@ import type React from "react"
 
 import { useState } from "react"
 import { X, Minus, Square } from "lucide-react"
-import type { AppWindow } from "./desktop"
+import type { AppWindow } from "../desktop"
 import { AppContent } from "./app-content"
 import { AppOpeningAnimation } from "./app-opening-animation"
-import { IOSSimulatorWindow } from "./ios-simulator-window"
+import { IOSSimulatorWindow } from "../ios-simulator"
 
 interface WindowManagerProps {
   windows: AppWindow[]
