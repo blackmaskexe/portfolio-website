@@ -1,22 +1,28 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { X, Minus, Square } from "lucide-react"
-import type { AppWindow } from "../desktop"
-import { AppContent } from "./app-content"
-import { AppOpeningAnimation } from "./app-opening-animation"
-import { IOSSimulatorWindow } from "../ios-simulator"
-import { useSimulatorSize } from "../../hooks/use-simulator-size"
+import { useState } from "react";
+import { X, Minus, Square } from "lucide-react";
+import type { AppWindow } from "../desktop";
+import { AppContent } from "./app-content";
+import { AppOpeningAnimation } from "./app-opening-animation";
+import { IOSSimulatorWindow } from "../ios-simulator";
+import { useSimulatorSize } from "../../hooks/use-simulator-size";
 
 interface WindowManagerProps {
-  windows: AppWindow[]
-  onClose: (windowId: string) => void
-  onMinimize: (windowId: string) => void
-  onUpdatePosition: (windowId: string, position: { x: number; y: number }) => void
-  onUpdateSize: (windowId: string, size: { width: number; height: number }) => void
-  onBringToFront: (windowId: string) => void
+  windows: AppWindow[];
+  onClose: (windowId: string) => void;
+  onMinimize: (windowId: string) => void;
+  onUpdatePosition: (
+    windowId: string,
+    position: { x: number; y: number }
+  ) => void;
+  onUpdateSize: (
+    windowId: string,
+    size: { width: number; height: number }
+  ) => void;
+  onBringToFront: (windowId: string) => void;
 }
 
 export function WindowManager({
@@ -27,50 +33,54 @@ export function WindowManager({
   onUpdateSize,
   onBringToFront,
 }: WindowManagerProps) {
-  const simulatorSize = useSimulatorSize()
-  
+  const simulatorSize = useSimulatorSize();
+
   const [dragState, setDragState] = useState<{
-    windowId: string | null
-    isDragging: boolean
-    startPos: { x: number; y: number }
-    startWindowPos: { x: number; y: number }
+    windowId: string | null;
+    isDragging: boolean;
+    startPos: { x: number; y: number };
+    startWindowPos: { x: number; y: number };
   }>({
     windowId: null,
     isDragging: false,
     startPos: { x: 0, y: 0 },
     startWindowPos: { x: 0, y: 0 },
-  })
+  });
 
   const [openingAnimations, setOpeningAnimations] = useState<
     Array<{
-      appId: string
-      appName: string
-      iconPosition: { x: number; y: number }
-      windowPosition: { x: number; y: number }
+      appId: string;
+      appName: string;
+      iconPosition: { x: number; y: number };
+      windowPosition: { x: number; y: number };
     }>
-  >([])
+  >([]);
 
-  const handleMouseDown = (e: React.MouseEvent, windowId: string, windowPos: { x: number; y: number }) => {
-    onBringToFront(windowId)
+  const handleMouseDown = (
+    e: React.MouseEvent,
+    windowId: string,
+    windowPos: { x: number; y: number }
+  ) => {
+    onBringToFront(windowId);
     setDragState({
       windowId,
       isDragging: true,
       startPos: { x: e.clientX, y: e.clientY },
       startWindowPos: windowPos,
-    })
-  }
+    });
+  };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (dragState.isDragging && dragState.windowId) {
-      const deltaX = e.clientX - dragState.startPos.x
-      const deltaY = e.clientY - dragState.startPos.y
+      const deltaX = e.clientX - dragState.startPos.x;
+      const deltaY = e.clientY - dragState.startPos.y;
 
       onUpdatePosition(dragState.windowId, {
         x: dragState.startWindowPos.x + deltaX,
         y: dragState.startWindowPos.y + deltaY,
-      })
+      });
     }
-  }
+  };
 
   const handleMouseUp = () => {
     setDragState({
@@ -78,17 +88,21 @@ export function WindowManager({
       isDragging: false,
       startPos: { x: 0, y: 0 },
       startWindowPos: { x: 0, y: 0 },
-    })
-  }
+    });
+  };
 
   const isIOSSimulatorApp = (appId: string) => {
-    const result = appId === "motivation-app" || appId === "habit-tracker"
-    console.log(`isIOSSimulatorApp check: "${appId}" => ${result}`) // Debug log
-    return result
-  }
+    const result = appId === "motivation-app" || appId === "habit-tracker";
+    console.log(`isIOSSimulatorApp check: "${appId}" => ${result}`); // Debug log
+    return result;
+  };
 
   return (
-    <div className="absolute inset-0 pt-6" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+    <div
+      className="absolute inset-0 pt-6"
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
       {/* Opening Animations */}
       {openingAnimations.map((animation, index) => (
         <AppOpeningAnimation
@@ -98,7 +112,7 @@ export function WindowManager({
           iconPosition={animation.iconPosition}
           windowPosition={animation.windowPosition}
           onComplete={() => {
-            setOpeningAnimations((prev) => prev.filter((_, i) => i !== index))
+            setOpeningAnimations((prev) => prev.filter((_, i) => i !== index));
           }}
         />
       ))}
@@ -106,8 +120,8 @@ export function WindowManager({
         .filter((w) => !w.isMinimized)
         .sort((a, b) => a.zIndex - b.zIndex)
         .map((window) => {
-          const isSimulator = isIOSSimulatorApp(window.appId)
-          console.log(`Window ${window.appId}: isSimulator = ${isSimulator}`) // Debug log
+          const isSimulator = isIOSSimulatorApp(window.appId);
+          console.log(`Window ${window.appId}: isSimulator = ${isSimulator}`); // Debug log
 
           return (
             <div
@@ -130,15 +144,17 @@ export function WindowManager({
                   {/* Simulator Title Bar */}
                   <div
                     className="h-14 bg-gray-700 flex items-center justify-between px-4 text-white text-sm cursor-move select-none rounded-t-lg rounded-b-lg shadow-lg"
-                    onMouseDown={(e) => handleMouseDown(e, window.id, window.position)}
-                    style={{ minHeight: '56px', maxHeight: '56px' }} // Force consistent height
+                    onMouseDown={(e) =>
+                      handleMouseDown(e, window.id, window.position)
+                    }
+                    style={{ minHeight: "56px", maxHeight: "56px" }} // Force consistent height
                   >
                     <div className="flex items-center space-x-3 flex-shrink-0">
                       <div className="flex space-x-1">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
-                            onClose(window.id)
+                            e.stopPropagation();
+                            onClose(window.id);
                           }}
                           className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 flex items-center justify-center"
                         >
@@ -146,8 +162,8 @@ export function WindowManager({
                         </button>
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
-                            onMinimize(window.id)
+                            e.stopPropagation();
+                            onMinimize(window.id);
                           }}
                           className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 flex items-center justify-center"
                         >
@@ -157,21 +173,30 @@ export function WindowManager({
                           <Square className="w-2 h-2 text-green-800 opacity-0 hover:opacity-100" />
                         </button>
                       </div>
-                      <span className="font-medium whitespace-nowrap">iPhone 16 Pro</span>
-                      <span className="text-gray-400 whitespace-nowrap">iOS 18.2</span>
+                      <span className="font-medium whitespace-nowrap">
+                        iPhone 16 Pro
+                      </span>
+                      <span className="text-gray-400 whitespace-nowrap">
+                        iOS 18.2
+                      </span>
                     </div>
-                    <div className="text-sm font-medium truncate">{window.title}</div>
+                    <div className="text-sm font-medium truncate">
+                      {window.title}
+                    </div>
                   </div>
 
                   {/* Phone Simulator Area (transparent padding maintained) */}
                   <div className="flex-1 relative bg-transparent pt-2">
-                    <div 
-                      style={{ 
-                        width: simulatorSize.phoneWidth, 
-                        height: simulatorSize.phoneHeight 
+                    <div
+                      style={{
+                        width: simulatorSize.phoneWidth,
+                        height: simulatorSize.phoneHeight,
                       }}
                     >
-                      <IOSSimulatorWindow appId={window.appId} appName={window.title} />
+                      <IOSSimulatorWindow
+                        appId={window.appId}
+                        appName={window.title}
+                      />
                     </div>
                   </div>
                 </div>
@@ -181,13 +206,15 @@ export function WindowManager({
                   {/* Title Bar */}
                   <div
                     className="h-8 bg-gray-100 border-b flex items-center justify-between px-4 cursor-move select-none window-titlebar"
-                    onMouseDown={(e) => handleMouseDown(e, window.id, window.position)}
+                    onMouseDown={(e) =>
+                      handleMouseDown(e, window.id, window.position)
+                    }
                   >
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          onClose(window.id)
+                          e.stopPropagation();
+                          onClose(window.id);
                         }}
                         className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-600 flex items-center justify-center"
                       >
@@ -195,8 +222,8 @@ export function WindowManager({
                       </button>
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          onMinimize(window.id)
+                          e.stopPropagation();
+                          onMinimize(window.id);
                         }}
                         className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-600 flex items-center justify-center"
                       >
@@ -206,7 +233,9 @@ export function WindowManager({
                         <Square className="w-2 h-2 text-green-800 opacity-0 hover:opacity-100" />
                       </button>
                     </div>
-                    <div className="text-sm font-medium text-gray-700">{window.title}</div>
+                    <div className="text-sm font-medium text-gray-700">
+                      {window.title}
+                    </div>
                     <div className="w-12" />
                   </div>
 
@@ -217,8 +246,8 @@ export function WindowManager({
                 </>
               )}
             </div>
-          )
+          );
         })}
     </div>
-  )
+  );
 }

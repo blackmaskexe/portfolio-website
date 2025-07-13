@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const isGithubPages = process.env.NODE_ENV === "production";
+
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -9,6 +11,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+  trailingSlash: true,
+  assetPrefix: isGithubPages ? "/portfolio-website/" : "",
+  output: "export", // 👈 THIS is now required
+};
 
-export default nextConfig
+export default nextConfig;
