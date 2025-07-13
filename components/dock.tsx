@@ -59,15 +59,12 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
                   onClick={() => handleAppClick(app.id, app.name)}
                   onMouseEnter={() => setHoveredApp(app.id)}
                   onMouseLeave={() => setHoveredApp(null)}
-                  className={`
-                    relative p-1 transition-all duration-200 ease-out
-                    ${isHovered ? "scale-110" : ""}
-                  `}
+                  className="relative p-1 transition-all duration-200 ease-out"
                 >
                   <div
                     className={`
                       w-12 h-12 transition-all duration-200 overflow-hidden
-                      ${isHovered ? "w-14 h-14" : ""}
+                      ${isHovered ? "scale-110" : ""}
                     `}
                     style={{
                       borderRadius: "22%",
@@ -110,16 +107,12 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
               onClick={() => handleAppClick("trash", "Trash")}
               onMouseEnter={() => setHoveredApp("trash")}
               onMouseLeave={() => setHoveredApp(null)}
-              className={`
-                relative p-2 rounded-xl transition-all duration-200 ease-out
-                ${hoveredApp === "trash" ? "scale-110" : ""}
-                hover:bg-white/10
-              `}
+              className="relative p-2 rounded-xl transition-all duration-200 ease-out hover:bg-white/10"
             >
               <Trash2
                 className={`
                   w-12 h-12 text-white transition-all duration-200
-                  ${hoveredApp === "trash" ? "w-14 h-14" : ""}
+                  ${hoveredApp === "trash" ? "scale-110" : ""}
                 `}
               />
 
