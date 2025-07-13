@@ -77,13 +77,13 @@ export function MenuBar({ currentTime, onControlCenterClick }: MenuBarProps) {
           )}
         </div>
 
-        <span>Finder</span>
+        {/* <span>Finder</span> */}
         <span>File</span>
         <span>Edit</span>
         <span>View</span>
-        <span>Go</span>
+        {/* <span>Go</span>
         <span>Window</span>
-        <span>Help</span>
+        <span>Help</span> */}
       </div>
 
       {/* Right side */}
