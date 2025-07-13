@@ -12,6 +12,7 @@ import { useSimulatorSize } from "../../hooks/use-simulator-size";
 
 interface WindowManagerProps {
   windows: AppWindow[];
+  theme?: "light" | "dark";
   onClose: (windowId: string) => void;
   onMinimize: (windowId: string) => void;
   onUpdatePosition: (
@@ -27,6 +28,7 @@ interface WindowManagerProps {
 
 export function WindowManager({
   windows,
+  theme = "light",
   onClose,
   onMinimize,
   onUpdatePosition,
@@ -97,6 +99,13 @@ export function WindowManager({
     return result;
   };
 
+  const isDark = theme === "dark";
+  const windowBgClass = isDark ? "bg-gray-800" : "bg-white";
+  const titleBarBgClass = isDark
+    ? "bg-gray-700 border-gray-600"
+    : "bg-gray-100 border-gray-200";
+  const titleTextClass = isDark ? "text-gray-200" : "text-gray-700";
+
   return (
     <div
       className="absolute inset-0 pt-6"
@@ -127,7 +136,7 @@ export function WindowManager({
             <div
               key={window.id}
               className={`absolute shadow-2xl overflow-hidden ${
-                isSimulator ? "bg-transparent" : "bg-white rounded-lg"
+                isSimulator ? "bg-transparent" : `${windowBgClass} rounded-lg`
               }`}
               style={{
                 left: window.position.x,
@@ -205,7 +214,7 @@ export function WindowManager({
                 <>
                   {/* Title Bar */}
                   <div
-                    className="h-8 bg-gray-100 border-b flex items-center justify-between px-4 cursor-move select-none window-titlebar"
+                    className={`h-8 ${titleBarBgClass} border-b flex items-center justify-between px-4 cursor-move select-none window-titlebar`}
                     onMouseDown={(e) =>
                       handleMouseDown(e, window.id, window.position)
                     }
@@ -233,7 +242,7 @@ export function WindowManager({
                         <Square className="w-2 h-2 text-green-800 opacity-0 hover:opacity-100" />
                       </button>
                     </div>
-                    <div className="text-sm font-medium text-gray-700">
+                    <div className={`text-sm font-medium ${titleTextClass}`}>
                       {window.title}
                     </div>
                     <div className="w-12" />
@@ -241,7 +250,7 @@ export function WindowManager({
 
                   {/* Window Content */}
                   <div className="flex-1 overflow-hidden">
-                    <AppContent appId={window.appId} />
+                    <AppContent appId={window.appId} theme={theme} />
                   </div>
                 </>
               )}

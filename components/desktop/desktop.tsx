@@ -1,55 +1,67 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect, useRef } from "react"
-import { MenuBar } from "../menu-bar"
-import { Dock } from "../dock"
-import { WindowManager } from "../window-manager"
-import { ControlCenter } from "../control-center"
-import { DesktopIcons } from "./desktop-icons"
+import { useState, useEffect, useRef } from "react";
+import { MenuBar } from "../menu-bar";
+import { Dock } from "../dock";
+import { WindowManager } from "../window-manager";
+import { ControlCenter } from "../control-center";
+import { DesktopIcons } from "./desktop-icons";
 
 export interface AppWindow {
-  id: string
-  appId: string
-  title: string
-  isMinimized: boolean
-  zIndex: number
-  position: { x: number; y: number }
-  size: { width: number; height: number }
+  id: string;
+  appId: string;
+  title: string;
+  isMinimized: boolean;
+  zIndex: number;
+  position: { x: number; y: number };
+  size: { width: number; height: number };
 }
 
-export function Desktop() {
-  const [openWindows, setOpenWindows] = useState<AppWindow[]>([])
-  const [showControlCenter, setShowControlCenter] = useState(false)
-  const [currentTime, setCurrentTime] = useState(new Date())
+interface DesktopProps {
+  theme?: "light" | "dark";
+}
 
-  const [isSelecting, setIsSelecting] = useState(false)
-  const [selectionStart, setSelectionStart] = useState({ x: 0, y: 0 })
-  const [selectionEnd, setSelectionEnd] = useState({ x: 0, y: 0 })
-  const desktopRef = useRef<HTMLDivElement>(null)
+export function Desktop({ theme = "light" }: DesktopProps) {
+  const [openWindows, setOpenWindows] = useState<AppWindow[]>([]);
+  const [showControlCenter, setShowControlCenter] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [selectionStart, setSelectionStart] = useState({ x: 0, y: 0 });
+  const [selectionEnd, setSelectionEnd] = useState({ x: 0, y: 0 });
+  const desktopRef = useRef<HTMLDivElement>(null);
 
   // Empty desktop icons array - no icons on desktop
-  const [desktopIcons] = useState([])
+  const [desktopIcons] = useState([]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date())
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [])
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const openApp = (appId: string, title: string) => {
-    const existingWindow = openWindows.find((w) => w.appId === appId && !w.isMinimized)
+    const existingWindow = openWindows.find(
+      (w) => w.appId === appId && !w.isMinimized
+    );
     if (existingWindow) {
       // Bring to front
       setOpenWindows((prev) =>
         prev.map((w) =>
-          w.id === existingWindow.id ? { ...w, zIndex: Math.max(...prev.map((w) => w.zIndex)) + 1 } : w,
-        ),
-      )
-      return
+          w.id === existingWindow.id
+            ? { ...w, zIndex: Math.max(...prev.map((w) => w.zIndex)) + 1 }
+            : w
+        )
+      );
+      return;
     }
+
+    // Check if this is an iOS simulator app
+    const isIOSSimulatorApp =
+      appId === "motivation-app" || appId === "habit-tracker";
 
     const newWindow: AppWindow = {
       id: `${appId}-${Date.now()}`,
@@ -59,47 +71,72 @@ export function Desktop() {
       zIndex: Math.max(...openWindows.map((w) => w.zIndex), 0) + 1,
       position: {
         x: 100 + openWindows.length * 30,
-        y: 100 + openWindows.length * 30,
+        // Position iOS simulator windows higher to ensure they fit on screen
+        y: isIOSSimulatorApp
+          ? 50 + openWindows.length * 20
+          : 100 + openWindows.length * 30,
       },
       size: { width: 800, height: 600 },
-    }
+    };
 
-    setOpenWindows((prev) => [...prev, newWindow])
-  }
+    setOpenWindows((prev) => [...prev, newWindow]);
+  };
 
   const closeWindow = (windowId: string) => {
-    setOpenWindows((prev) => prev.filter((w) => w.id !== windowId))
-  }
+    setOpenWindows((prev) => prev.filter((w) => w.id !== windowId));
+  };
 
   const minimizeWindow = (windowId: string) => {
-    setOpenWindows((prev) => prev.map((w) => (w.id === windowId ? { ...w, isMinimized: true } : w)))
-  }
+    setOpenWindows((prev) =>
+      prev.map((w) => (w.id === windowId ? { ...w, isMinimized: true } : w))
+    );
+  };
 
   const restoreWindow = (windowId: string) => {
     setOpenWindows((prev) =>
       prev.map((w) =>
-        w.id === windowId ? { ...w, isMinimized: false, zIndex: Math.max(...prev.map((w) => w.zIndex)) + 1 } : w,
-      ),
-    )
-  }
+        w.id === windowId
+          ? {
+              ...w,
+              isMinimized: false,
+              zIndex: Math.max(...prev.map((w) => w.zIndex)) + 1,
+            }
+          : w
+      )
+    );
+  };
 
-  const updateWindowPosition = (windowId: string, position: { x: number; y: number }) => {
-    setOpenWindows((prev) => prev.map((w) => (w.id === windowId ? { ...w, position } : w)))
-  }
+  const updateWindowPosition = (
+    windowId: string,
+    position: { x: number; y: number }
+  ) => {
+    setOpenWindows((prev) =>
+      prev.map((w) => (w.id === windowId ? { ...w, position } : w))
+    );
+  };
 
-  const updateWindowSize = (windowId: string, size: { width: number; height: number }) => {
-    setOpenWindows((prev) => prev.map((w) => (w.id === windowId ? { ...w, size } : w)))
-  }
+  const updateWindowSize = (
+    windowId: string,
+    size: { width: number; height: number }
+  ) => {
+    setOpenWindows((prev) =>
+      prev.map((w) => (w.id === windowId ? { ...w, size } : w))
+    );
+  };
 
   const bringToFront = (windowId: string) => {
     setOpenWindows((prev) =>
-      prev.map((w) => (w.id === windowId ? { ...w, zIndex: Math.max(...prev.map((w) => w.zIndex)) + 1 } : w)),
-    )
-  }
+      prev.map((w) =>
+        w.id === windowId
+          ? { ...w, zIndex: Math.max(...prev.map((w) => w.zIndex)) + 1 }
+          : w
+      )
+    );
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     // Check if we're clicking on an interactive element or window dragging area
-    const target = e.target as HTMLElement
+    const target = e.target as HTMLElement;
     const isInteractiveElement =
       target.closest("button") ||
       target.closest('[role="button"]') ||
@@ -107,39 +144,39 @@ export function Desktop() {
       target.closest(".dock") ||
       target.closest(".menu-bar") ||
       target.closest(".cursor-move") ||
-      target.classList.contains("cursor-move")
+      target.classList.contains("cursor-move");
 
     // Only start selection if NOT clicking on interactive elements
     if (!isInteractiveElement) {
-      e.preventDefault()
-      setIsSelecting(true)
-      setSelectionStart({ x: e.clientX, y: e.clientY })
-      setSelectionEnd({ x: e.clientX, y: e.clientY })
+      e.preventDefault();
+      setIsSelecting(true);
+      setSelectionStart({ x: e.clientX, y: e.clientY });
+      setSelectionEnd({ x: e.clientX, y: e.clientY });
 
       // Add global mouse event listeners for dragging
       const handleGlobalMouseMove = (e: MouseEvent) => {
-        setSelectionEnd({ x: e.clientX, y: e.clientY })
-      }
+        setSelectionEnd({ x: e.clientX, y: e.clientY });
+      };
 
       const handleGlobalMouseUp = () => {
-        setIsSelecting(false)
-        document.removeEventListener("mousemove", handleGlobalMouseMove)
-        document.removeEventListener("mouseup", handleGlobalMouseUp)
-      }
+        setIsSelecting(false);
+        document.removeEventListener("mousemove", handleGlobalMouseMove);
+        document.removeEventListener("mouseup", handleGlobalMouseUp);
+      };
 
-      document.addEventListener("mousemove", handleGlobalMouseMove)
-      document.addEventListener("mouseup", handleGlobalMouseUp)
+      document.addEventListener("mousemove", handleGlobalMouseMove);
+      document.addEventListener("mouseup", handleGlobalMouseUp);
     }
-  }
+  };
 
   // Calculate selection rectangle properties
   const getSelectionRect = () => {
-    const left = Math.min(selectionStart.x, selectionEnd.x)
-    const top = Math.min(selectionStart.y, selectionEnd.y)
-    const width = Math.abs(selectionEnd.x - selectionStart.x)
-    const height = Math.abs(selectionEnd.y - selectionStart.y)
-    return { left, top, width, height }
-  }
+    const left = Math.min(selectionStart.x, selectionEnd.x);
+    const top = Math.min(selectionStart.y, selectionEnd.y);
+    const width = Math.abs(selectionEnd.x - selectionStart.x);
+    const height = Math.abs(selectionEnd.y - selectionStart.y);
+    return { left, top, width, height };
+  };
 
   return (
     <div
@@ -171,14 +208,23 @@ export function Desktop() {
       <DesktopIcons icons={desktopIcons} onOpenApp={openApp} />
 
       {/* Menu Bar */}
-      <MenuBar currentTime={currentTime} onControlCenterClick={() => setShowControlCenter(!showControlCenter)} />
+      <MenuBar
+        currentTime={currentTime}
+        onControlCenterClick={() => setShowControlCenter(!showControlCenter)}
+      />
 
       {/* Control Center */}
-      {showControlCenter && <ControlCenter onClose={() => setShowControlCenter(false)} />}
+      {showControlCenter && (
+        <ControlCenter
+          theme={theme}
+          onClose={() => setShowControlCenter(false)}
+        />
+      )}
 
       {/* Window Manager */}
       <WindowManager
         windows={openWindows}
+        theme={theme}
         onClose={closeWindow}
         onMinimize={minimizeWindow}
         onUpdatePosition={updateWindowPosition}
@@ -187,7 +233,11 @@ export function Desktop() {
       />
 
       {/* Dock */}
-      <Dock openWindows={openWindows} onOpenApp={openApp} onRestoreWindow={restoreWindow} />
+      <Dock
+        openWindows={openWindows}
+        onOpenApp={openApp}
+        onRestoreWindow={restoreWindow}
+      />
     </div>
-  )
+  );
 }
