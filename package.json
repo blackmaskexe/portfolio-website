@@ -1,16 +1,32 @@
 {
-  "name": "my-v0-project",
+  "name": "react-macos-desktop",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "a macos-simulator component that can be used to display applications that open up either as macos application windows or ios simulator window in macos. Useful for showcasing projects, etc in your portfolios",
+  "author": "blackmaskexe",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blackmaskexe/react-macos-desktop.git"
+  },
+  "main": "dist/index.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "build": "next build",
     "dev": "next dev",
-    "lint": "next lint",
+    "build-app": "next build",
     "start": "next start",
-    "export": "next export",
-    "deploy": "next build && gh-pages -d out"
+    "lint": "next lint",
+    "build": "rm -rf dist && babel lib --out-dir dist --copy-files --config-file ./babel.config.lib.json"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "dependencies": {
+    "@babel/runtime": "^7.27.6",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "latest",
     "@radix-ui/react-alert-dialog": "latest",
@@ -49,12 +65,11 @@
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "next-themes": "latest",
-    "react": "^19",
+    "react": ">=18",
     "react-day-picker": "latest",
-    "react-dom": "^19",
+    "react-dom": ">=18",
     "react-hook-form": "latest",
     "react-resizable-panels": "latest",
-    "recharts": "latest",
     "sonner": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
@@ -62,6 +77,11 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.28.0",
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",

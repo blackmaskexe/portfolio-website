@@ -1,1 +1,1 @@
-export { Dock } from "./dock"
+export { Dock } from "./dock";

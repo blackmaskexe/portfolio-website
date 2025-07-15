@@ -8,7 +8,7 @@ import type { AppWindow } from "../desktop";
 import { AppContent } from "./app-content";
 import { AppOpeningAnimation } from "./app-opening-animation";
 import { IOSSimulatorWindow } from "../ios-simulator";
-import { useSimulatorSize } from "../../../hooks/use-simulator-size";
+import { useSimulatorSize } from "../../hooks/use-simulator-size";
 
 interface WindowManagerProps {
   windows: AppWindow[];

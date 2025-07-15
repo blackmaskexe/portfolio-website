@@ -9,6 +9,8 @@ import { WindowManager } from "../window-manager";
 import { ControlCenter } from "../control-center";
 import { DesktopIcons } from "./desktop-icons";
 
+import wallpaperImage from "../../assets/aurora-wallpaper.jpeg";
+
 export interface AppWindow {
   id: string;
   appId: string;
@@ -187,7 +189,9 @@ export function Desktop({ theme = "light" }: DesktopProps) {
       {/* Desktop Background */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat desktop-background"
-        style={{ backgroundImage: "url(/new-aurora-wallpaper.jpeg)" }}
+        style={{
+          backgroundImage: `url(${wallpaperImage.src || wallpaperImage})`,
+        }}
       />
 
       {/* Selection Rectangle */}

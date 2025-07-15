@@ -1,1 +1,1 @@
-export { WindowManager } from "./window-manager"
+export { WindowManager } from "./window-manager";

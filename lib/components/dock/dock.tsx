@@ -1,47 +1,58 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Trash2 } from "lucide-react"
-import type { AppWindow } from "../desktop"
+import { useState } from "react";
+import { Trash2 } from "lucide-react";
+import type { AppWindow } from "../desktop";
+
+import habitTrackerLogo from "../../assets/app-icons/habit-tracker.png";
+import motivationAppLogo from "../../assets/app-icons/motivation-app.png";
+
+console.log(
+  "cassey's been waiting too long",
+  habitTrackerLogo,
+  motivationAppLogo
+);
 
 interface DockProps {
-  openWindows: AppWindow[]
-  onOpenApp: (appId: string, title: string) => void
-  onRestoreWindow: (windowId: string) => void
+  openWindows: AppWindow[];
+  onOpenApp: (appId: string, title: string) => void;
+  onRestoreWindow: (windowId: string) => void;
 }
 
 const dockApps = [
   {
     id: "motivation-app",
     name: "Motivation",
-    iconPath: "/app-icons/motivation-app.png",
+    iconPath: motivationAppLogo.src || motivationAppLogo,
   },
   {
     id: "habit-tracker",
     name: "Habit Tracker",
-    iconPath: "/app-icons/habit-tracker.png",
+    iconPath: habitTrackerLogo.src || habitTrackerLogo,
   },
-]
+];
 
 export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
-  const [hoveredApp, setHoveredApp] = useState<string | null>(null)
+  const [hoveredApp, setHoveredApp] = useState<string | null>(null);
 
   const handleAppClick = (appId: string, appName: string) => {
-    const minimizedWindow = openWindows.find((w) => w.appId === appId && w.isMinimized)
+    const minimizedWindow = openWindows.find(
+      (w) => w.appId === appId && w.isMinimized
+    );
     if (minimizedWindow) {
-      onRestoreWindow(minimizedWindow.id)
+      onRestoreWindow(minimizedWindow.id);
     } else {
-      onOpenApp(appId, appName)
+      onOpenApp(appId, appName);
     }
-  }
+  };
 
   const isAppOpen = (appId: string) => {
-    return openWindows.some((w) => w.appId === appId && !w.isMinimized)
-  }
+    return openWindows.some((w) => w.appId === appId && !w.isMinimized);
+  };
 
   const isAppMinimized = (appId: string) => {
-    return openWindows.some((w) => w.appId === appId && w.isMinimized)
-  }
+    return openWindows.some((w) => w.appId === appId && w.isMinimized);
+  };
 
   return (
     <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-40">
@@ -49,9 +60,9 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
         <div className="flex items-center space-x-1">
           {/* Regular Apps */}
           {dockApps.map((app) => {
-            const isOpen = isAppOpen(app.id)
-            const isMinimized = isAppMinimized(app.id)
-            const isHovered = hoveredApp === app.id
+            const isOpen = isAppOpen(app.id);
+            const isMinimized = isAppMinimized(app.id);
+            const isHovered = hoveredApp === app.id;
 
             return (
               <div key={app.id} className="relative flex flex-col items-center">
@@ -68,14 +79,15 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
                     `}
                     style={{
                       borderRadius: "22%",
-                      background: "linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))",
+                      background:
+                        "linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))",
                       boxShadow: isHovered
                         ? "0 8px 25px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)"
                         : "0 4px 15px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)",
                     }}
                   >
                     <img
-                      src={app.iconPath || "/placeholder.svg"}
+                      src={app.iconPath as string}
                       alt={app.name}
                       className="w-full h-full object-cover"
                       style={{ borderRadius: "20%" }}
@@ -95,7 +107,7 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
                   </div>
                 )}
               </div>
-            )
+            );
           })}
 
           {/* Separator */}
@@ -132,5 +144,5 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

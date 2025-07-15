@@ -1,9 +1,9 @@
 "use client";
 
 import { ToggleLeft, Settings } from "lucide-react";
-import { Card, CardContent } from "@/lib/components/ui/card";
-import { Button } from "@/lib/components/ui/button";
-import { Slider } from "@/lib/components/ui/slider";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { Slider } from "../ui/slider";
 
 interface ControlCenterProps {
   theme?: "light" | "dark";

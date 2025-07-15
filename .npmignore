@@ -1,0 +1,34 @@
+# Node dependencies
+node_modules/
+
+# Next.js specific files (for your local demo app)
+.next/
+app/
+public/
+next.config.mjs
+next-env.d.ts
+
+# Source code (we only want to publish the compiled 'dist' folder)
+lib/
+hooks/
+src/
+styles/
+utils/
+
+# Configuration files
+.babelrc
+.gitignore
+components.json
+postcss.config.mjs
+tailwind.config.ts
+tsconfig.json
+vite.config.js
+
+# Lockfiles
+yarn.lock
+package-lock.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

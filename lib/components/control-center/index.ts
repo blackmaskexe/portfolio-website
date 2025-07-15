@@ -1,1 +1,1 @@
-export { ControlCenter } from "./control-center"
+export { ControlCenter } from "./control-center";
