@@ -158,7 +158,7 @@ export function WindowManager({
                     }
                     style={{ minHeight: "56px", maxHeight: "56px" }} // Force consistent height
                   >
-                    <div className="flex items-center space-x-3 flex-shrink-0 w-full justify-between">
+                    <div className="flex items-center space-x-3 flex-shrink-0">
                       <div className="flex space-x-1">
                         <button
                           onClick={(e) => {
@@ -183,15 +183,15 @@ export function WindowManager({
                         </button>
                       </div>
                       <span className="font-medium whitespace-nowrap">
-                        {window.title}
+                        iPhone 16 Pro
                       </span>
-                      <span className="text-gray-400 whitespace-nowrap text-right block">
+                      <span className="text-gray-400 whitespace-nowrap">
                         iOS 18.2
                       </span>
                     </div>
-                    {/* <div className="text-sm font-medium truncate">
+                    <div className="text-sm font-medium truncate">
                       {window.title}
-                    </div> */}
+                    </div>
                   </div>
 
                   {/* Phone Simulator Area (transparent padding maintained) */}
