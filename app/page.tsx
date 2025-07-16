@@ -6,5 +6,9 @@ import { Desktop } from "@/components/desktop";
 export default function Home() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
-  return <Desktop theme={theme} />;
+  return (
+    <div className="h-screen w-screen overflow-hidden fixed inset-0">
+      <Desktop theme={theme} />
+    </div>
+  );
 }

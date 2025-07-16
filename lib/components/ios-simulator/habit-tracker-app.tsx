@@ -28,7 +28,7 @@ export function HabitTrackerApp() {
       <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-black rounded-full" />
 
       {/* Main Content */}
-      <div className="flex-1 w-full overflow-y-auto pt-8 pb-20 px-0">
+      <div className="flex-1 w-full pt-0 pb-20 px-0">
         {activeTab === "home" ? <HabitHome /> : <HabitAIChat />}
       </div>
 
