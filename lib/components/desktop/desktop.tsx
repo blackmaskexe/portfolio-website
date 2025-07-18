@@ -25,6 +25,34 @@ interface DesktopProps {
   theme?: "light" | "dark";
 }
 
+const showcaseAppIds = [
+  {
+    id: "gains-chat",
+    title: "Gains Chat",
+    isIosSimulator: true,
+  },
+  {
+    id: "habitmentor-ai",
+    title: "Habit Mentor AI",
+    isIosSimulator: true,
+  },
+  {
+    id: "project-manager",
+    title: "Project Manager",
+    isIosSimulator: false,
+  },
+  {
+    id: "file-explorer",
+    title: "File Explorer",
+    isIosSimulator: false,
+  },
+  {
+    id: "settings",
+    title: "Settings",
+    isIosSimulator: false,
+  },
+];
+
 export function Desktop({ theme = "light" }: DesktopProps) {
   const [openWindows, setOpenWindows] = useState<AppWindow[]>([]);
   const [showControlCenter, setShowControlCenter] = useState(false);
@@ -45,12 +73,14 @@ export function Desktop({ theme = "light" }: DesktopProps) {
     return () => clearInterval(timer);
   }, []);
 
-  const openApp = (appId: string, title: string) => {
+  const openApp = (appId: string) => {
+    const appConfig = showcaseAppIds.find(app => app.id === appId);
+    if (!appConfig) return;
+    const { title, isIosSimulator } = appConfig;
     const existingWindow = openWindows.find(
       (w) => w.appId === appId && !w.isMinimized
     );
     if (existingWindow) {
-      // Bring to front
       setOpenWindows((prev) =>
         prev.map((w) =>
           w.id === existingWindow.id
@@ -60,11 +90,6 @@ export function Desktop({ theme = "light" }: DesktopProps) {
       );
       return;
     }
-
-    // Check if this is an iOS simulator app
-    const isIOSSimulatorApp =
-      appId === "gains-chat" || appId === "habitmentor-ai";
-
     const newWindow: AppWindow = {
       id: `${appId}-${Date.now()}`,
       appId,
@@ -73,14 +98,12 @@ export function Desktop({ theme = "light" }: DesktopProps) {
       zIndex: Math.max(...openWindows.map((w) => w.zIndex), 0) + 1,
       position: {
         x: 100 + openWindows.length * 30,
-        // Position iOS simulator windows higher to ensure they fit on screen
-        y: isIOSSimulatorApp
+        y: isIosSimulator
           ? 50 + openWindows.length * 20
           : 100 + openWindows.length * 30,
       },
       size: { width: 800, height: 600 },
     };
-
     setOpenWindows((prev) => [...prev, newWindow]);
   };
 
@@ -150,7 +173,6 @@ export function Desktop({ theme = "light" }: DesktopProps) {
 
     // Only start selection if NOT clicking on interactive elements
     if (!isInteractiveElement) {
-      e.preventDefault();
       setIsSelecting(true);
       setSelectionStart({ x: e.clientX, y: e.clientY });
       setSelectionEnd({ x: e.clientX, y: e.clientY });
@@ -183,7 +205,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
   return (
     <div
       ref={desktopRef}
-      className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800 select-none"
+      className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800"
       onMouseDown={handleMouseDown}
     >
       {/* Desktop Background */}
@@ -209,7 +231,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
       )}
 
       {/* Desktop Icons - now empty */}
-      <DesktopIcons icons={desktopIcons} onOpenApp={openApp} />
+      <DesktopIcons icons={desktopIcons} onOpenApp={id => openApp(id)} />
 
       {/* Menu Bar */}
       <MenuBar
@@ -239,7 +261,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
       {/* Dock */}
       <Dock
         openWindows={openWindows}
-        onOpenApp={openApp}
+        onOpenApp={id => openApp(id)}
         onRestoreWindow={restoreWindow}
       />
     </div>

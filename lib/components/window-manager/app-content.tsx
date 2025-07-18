@@ -1,6 +1,7 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
+import ProjectManagerApp from "../apps/project-manager/project-manager-app";
 
 interface AppContentProps {
   appId: string;
@@ -26,6 +27,11 @@ export function AppContent({ appId, theme = "light" }: AppContentProps) {
           </div>
         </div>
       );
+
+      case "project-manager":
+        return (
+          <ProjectManagerApp />
+        )
 
     default:
       return (

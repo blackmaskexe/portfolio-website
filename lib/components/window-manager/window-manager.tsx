@@ -108,7 +108,7 @@ export function WindowManager({
 
   return (
     <div
-      className="absolute inset-0 pt-6"
+      className="absolute inset-0 pt-6 pointer-events-auto"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >

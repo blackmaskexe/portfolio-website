@@ -30,8 +30,10 @@ export function IOSSimulatorWindow({
   };
 
   return (
-    <div className="w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-black">
-      {renderAppContent()}
+    <div className="w-full h-full flex flex-col rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-black z-50 pointer-events-auto">
+      <div className="flex-1 flex flex-col w-full h-full pointer-events-auto">
+        {renderAppContent()}
+      </div>
     </div>
   );
 }

@@ -22,6 +22,6 @@
       "@/*": ["./lib/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "lib/components/apps/project-manager/MainPanel.jsx", "lib/components/apps/project-manager/AddProjectModal.jsx", "lib/components/apps/project-manager/ProjectInfo.jsx", "lib/components/apps/project-manager/Sidebar.jsx", "lib/components/apps/project-manager/TaskView.jsx"],
   "exclude": ["node_modules"]
 }
