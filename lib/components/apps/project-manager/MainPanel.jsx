@@ -19,8 +19,8 @@ export default function MainPanel({
   }, [projects]);
 
   return (
-    <div className="p-8 bg-gray-900 font-mono w-full transition-all duration-300 sm:pl-72 sm:pr-8 h-screen">
-      <div className="w-full h-full flex flex-col gap-8">
+    <div className="bg-gray-900 font-mono w-full h-full min-h-0 flex flex-col transition-all duration-300 px-2 py-4 sm:pl-72 sm:pr-8 sm:px-8 sm:py-8">
+      <div className="flex-1 min-h-0 w-full flex flex-col gap-6">
         {isDialogOpen ? (
           <AddProjectModal
             setIsDialogOpen={setIsDialogOpen}
@@ -41,8 +41,8 @@ export default function MainPanel({
             />
           </>
         ) : (
-          <div className="flex items-center justify-center h-screen">
-            <h2 className="text-2xl font-bold text-gray-200">
+          <div className="flex items-center justify-center flex-1 min-h-0">
+            <h2 className="text-2xl font-bold text-gray-200 text-center">
               Add or Select a Project
             </h2>
           </div>

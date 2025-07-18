@@ -49,14 +49,63 @@ export function WindowManager({
     startWindowPos: { x: 0, y: 0 },
   });
 
-  const [openingAnimations, setOpeningAnimations] = useState<
-    Array<{
-      appId: string;
-      appName: string;
-      iconPosition: { x: number; y: number };
-      windowPosition: { x: number; y: number };
-    }>
-  >([]);
+  type OpeningAnimation = {
+    appId: string;
+    appName: string;
+    iconPosition: { x: number; y: number };
+    windowPosition: { x: number; y: number };
+  };
+  const [openingAnimations, setOpeningAnimations] = useState<OpeningAnimation[]>([]);
+  
+  // Resizing state
+  const [resizeState, setResizeState] = useState<{
+    windowId: string | null;
+    isResizing: boolean;
+    startPos: { x: number; y: number };
+    startWindowSize: { width: number; height: number };
+  }>({
+    windowId: null,
+    isResizing: false,
+    startPos: { x: 0, y: 0 },
+    startWindowSize: { width: 0, height: 0 },
+  });
+  // Resize mouse events
+  const handleResizeMouseDown = (
+    e: React.MouseEvent,
+    windowId: string,
+    windowSize: { width: number; height: number }
+  ) => {
+    e.stopPropagation();
+    setResizeState({
+      windowId,
+      isResizing: true,
+      startPos: { x: e.clientX, y: e.clientY },
+      startWindowSize: windowSize,
+    });
+  };
+
+  const handleResizeMouseMove = (e: React.MouseEvent) => {
+    if (resizeState.isResizing && resizeState.windowId) {
+      const deltaX = e.clientX - resizeState.startPos.x;
+      const deltaY = e.clientY - resizeState.startPos.y;
+      onUpdateSize(resizeState.windowId, {
+        width: Math.max(300, resizeState.startWindowSize.width + deltaX),
+        height: Math.max(200, resizeState.startWindowSize.height + deltaY),
+      });
+    }
+    // Also allow window dragging
+    handleMouseMove(e);
+  };
+
+  const handleResizeMouseUp = () => {
+    setResizeState({
+      windowId: null,
+      isResizing: false,
+      startPos: { x: 0, y: 0 },
+      startWindowSize: { width: 0, height: 0 },
+    });
+    handleMouseUp();
+  };
 
   const handleMouseDown = (
     e: React.MouseEvent,
@@ -109,8 +158,8 @@ export function WindowManager({
   return (
     <div
       className="absolute inset-0 pt-6 pointer-events-auto"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
+      onMouseMove={handleResizeMouseMove}
+      onMouseUp={handleResizeMouseUp}
     >
       {/* Opening Animations */}
       {openingAnimations.map((animation, index) => (
@@ -130,8 +179,7 @@ export function WindowManager({
         .sort((a, b) => a.zIndex - b.zIndex)
         .map((window) => {
           const isSimulator = isIOSSimulatorApp(window.appId);
-          console.log(`Window ${window.appId}: isSimulator = ${isSimulator}`); // Debug log
-
+          // Only add resize handle for non-simulator windows
           return (
             <div
               key={window.id}
@@ -144,6 +192,7 @@ export function WindowManager({
                 width: isSimulator ? simulatorSize.width : window.size.width,
                 height: isSimulator ? simulatorSize.height : window.size.height,
                 zIndex: window.zIndex,
+                userSelect: resizeState.isResizing ? "none" : undefined,
               }}
               onClick={() => onBringToFront(window.id)}
             >
@@ -189,9 +238,6 @@ export function WindowManager({
                         iOS 18.2
                       </span>
                     </div>
-                    {/* <div className="text-sm font-medium truncate">
-                      {window.title}
-                    </div> */}
                   </div>
 
                   {/* Phone Simulator Area (transparent padding maintained) */}
@@ -251,6 +297,22 @@ export function WindowManager({
                   {/* Window Content */}
                   <div className="flex-1 overflow-hidden">
                     <AppContent appId={window.appId} theme={theme} />
+                  </div>
+                  {/* Resize Handle */}
+                  <div
+                    className="absolute bottom-2 right-2 w-5 h-5 bg-gray-700 rounded cursor-nwse-resize flex items-center justify-center z-50"
+                    style={{
+                      userSelect: "none",
+                    }}
+                    onMouseDown={(e) =>
+                      handleResizeMouseDown(e, window.id, window.size)
+                    }
+                    title="Resize"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M2 14L14 2" stroke="#ccc" strokeWidth="2" strokeLinecap="round" />
+                      <path d="M8 14L14 8" stroke="#ccc" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
                   </div>
                 </>
               )}
