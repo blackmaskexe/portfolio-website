@@ -1,7 +1,7 @@
 "use client";
 
-import { MotivationApp } from "./motivation-app";
-import { HabitTrackerApp } from "./habit-tracker-app";
+import { GainsChatApp } from "../apps/gains-chat/gains-chat-app";
+import { HabitMentorAIApp } from "../apps/habitmentor-ai/habitmentor-ai-app";
 
 interface IOSSimulatorWindowProps {
   appId: string;
@@ -14,11 +14,11 @@ export function IOSSimulatorWindow({
 }: IOSSimulatorWindowProps) {
   const renderAppContent = () => {
     switch (appId) {
-      case "motivation-app":
-        return <MotivationApp />;
+      case "gains-chat":
+        return <GainsChatApp />;
 
-      case "habit-tracker":
-        return <HabitTrackerApp />;
+      case "habitmentor-ai":
+        return <HabitMentorAIApp />;
 
       default:
         return (

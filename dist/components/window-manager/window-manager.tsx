@@ -94,7 +94,7 @@ export function WindowManager({
   };
 
   const isIOSSimulatorApp = (appId: string) => {
-    const result = appId === "motivation-app" || appId === "habit-tracker";
+    const result = appId === "gains-chat" || appId === "habitmentor-ai";
     console.log(`isIOSSimulatorApp check: "${appId}" => ${result}`); // Debug log
     return result;
   };

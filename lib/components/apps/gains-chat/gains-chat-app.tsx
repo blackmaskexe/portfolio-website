@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Wifi, Battery } from "lucide-react"
+import { useState } from "react";
+import { Wifi, Battery } from "lucide-react";
 
-export function MotivationApp() {
-  const [currentTime] = useState("2:37")
+export function GainsChatApp() {
+  const [currentTime] = useState("2:37");
 
   return (
     <div className="h-full bg-gradient-to-br from-blue-500 to-purple-600 text-white relative overflow-hidden">
@@ -33,7 +33,9 @@ export function MotivationApp() {
         <div className="space-y-4">
           <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6">
             <h3 className="text-lg font-semibold mb-2">Today's Quote</h3>
-            <p className="text-white/90">"The only impossible journey is the one you never begin."</p>
+            <p className="text-white/90">
+              "The only impossible journey is the one you never begin."
+            </p>
             <p className="text-white/70 text-sm mt-2">- Tony Robbins</p>
           </div>
 
@@ -61,5 +63,5 @@ export function MotivationApp() {
       {/* Home Indicator */}
       <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-white/50 rounded-full" />
     </div>
-  )
+  );
 }

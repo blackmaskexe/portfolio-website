@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import type { AppWindow } from "../desktop";
 
-import habitTrackerLogo from "../../assets/app-icons/habit-tracker.png";
-import motivationAppLogo from "../../assets/app-icons/motivation-app.png";
+import habitTrackerLogo from "../../assets/app-icons/habitmentor-ai.png";
+import motivationAppLogo from "../../assets/app-icons/gains-chat.png";
 
 console.log(
   "cassey's been waiting too long",
@@ -21,13 +21,13 @@ interface DockProps {
 
 const dockApps = [
   {
-    id: "motivation-app",
-    name: "Motivation",
+    id: "gains-chat",
+    name: "Gains Chat",
     iconPath: motivationAppLogo.src || motivationAppLogo,
   },
   {
-    id: "habit-tracker",
-    name: "Habit Tracker",
+    id: "habitmentor-ai",
+    name: "HabitMentor AI",
     iconPath: habitTrackerLogo.src || habitTrackerLogo,
   },
 ];

@@ -23,8 +23,8 @@ components/
 │   └── index.ts                  # Barrel export
 ├── ios-simulator/       # iOS simulator and apps
 │   ├── ios-simulator-window.tsx  # iOS simulator window
-│   ├── motivation-app.tsx        # Motivation app content
-│   ├── habit-tracker-app.tsx     # Habit tracker app content
+│   ├── gains-chat.tsx        # Motivation app content
+│   ├── habitmentor-ai-app.tsx     # Habit tracker app content
 │   └── index.ts                  # Barrel export
 ├── control-center/      # macOS-style control center
 │   ├── control-center.tsx        # Control center component
@@ -41,7 +41,9 @@ components/
 ## Organization Principles
 
 ### 1. **Feature-Based Grouping**
+
 Each major UI feature has its own folder:
+
 - `desktop/` - Desktop environment and desktop icons
 - `dock/` - Dock functionality
 - `menu-bar/` - Menu bar functionality
@@ -50,46 +52,55 @@ Each major UI feature has its own folder:
 - `control-center/` - Control center functionality
 
 ### 2. **Related Components Together**
+
 Components that are closely related or used together are grouped in the same folder:
-- iOS apps (`motivation-app.tsx`, `habit-tracker-app.tsx`) are with the simulator
+
+- iOS apps (`gains-chat.tsx`, `habitmentor-ai-app.tsx`) are with the simulator
 - Window animations (`app-opening-animation.tsx`) are with the window manager
 - Desktop icons are with the main desktop component
 
 ### 3. **Barrel Exports**
+
 Each folder includes an `index.ts` file that exports its public API, making imports cleaner:
+
 ```typescript
 // Instead of:
-import { Desktop } from "@/components/desktop/desktop"
+import { Desktop } from "@/components/desktop/desktop";
 
 // You can use:
-import { Desktop } from "@/components/desktop"
+import { Desktop } from "@/components/desktop";
 ```
 
 ### 4. **Preserved UI Components**
+
 The `ui/` folder remains unchanged as it contains shared UI components that are used across all features.
 
 ## Import Examples
 
 ```typescript
 // Main app components
-import { Desktop } from "@/components/desktop"
-import { Dock } from "@/components/dock"
-import { MenuBar } from "@/components/menu-bar"
-import { WindowManager } from "@/components/window-manager"
-import { ControlCenter } from "@/components/control-center"
+import { Desktop } from "@/components/desktop";
+import { Dock } from "@/components/dock";
+import { MenuBar } from "@/components/menu-bar";
+import { WindowManager } from "@/components/window-manager";
+import { ControlCenter } from "@/components/control-center";
 
 // iOS simulator components
-import { IOSSimulatorWindow, MotivationApp, HabitTrackerApp } from "@/components/ios-simulator"
+import {
+  IOSSimulatorWindow,
+  MotivationApp,
+  HabitTrackerApp,
+} from "@/components/ios-simulator";
 
 // Types
-import type { AppWindow } from "@/components/desktop"
+import type { AppWindow } from "@/components/desktop";
 
 // Providers
-import { ThemeProvider } from "@/components/providers"
+import { ThemeProvider } from "@/components/providers";
 
 // UI components (unchanged)
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 ```
 
 ## Benefits

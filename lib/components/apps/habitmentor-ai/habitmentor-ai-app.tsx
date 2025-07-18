@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { Wifi, Battery } from "lucide-react";
 import { IoHomeOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5";
-import { HabitHome } from "../apps/habit-home";
-import { HabitAIChat } from "../apps/habit-ai-chat";
+import { HabitHome } from "./habit-home";
+import { HabitAIChat } from "./habit-ai-chat";
 
-export function HabitTrackerApp() {
+export function HabitMentorAIApp() {
   const [currentTime] = useState("2:37");
   const [activeTab, setActiveTab] = useState<"home" | "ai">("home");
 

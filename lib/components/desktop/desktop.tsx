@@ -63,7 +63,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
 
     // Check if this is an iOS simulator app
     const isIOSSimulatorApp =
-      appId === "motivation-app" || appId === "habit-tracker";
+      appId === "gains-chat" || appId === "habitmentor-ai";
 
     const newWindow: AppWindow = {
       id: `${appId}-${Date.now()}`,

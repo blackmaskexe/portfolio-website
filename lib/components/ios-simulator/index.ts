@@ -1,3 +1,3 @@
 export { IOSSimulatorWindow } from "./ios-simulator-window";
-export { MotivationApp } from "./motivation-app";
-export { HabitTrackerApp } from "./habit-tracker-app";
+export { GainsChatApp } from "../apps/gains-chat/gains-chat-app";
+export { HabitMentorAIApp } from "../apps/habitmentor-ai/habitmentor-ai-app";
