@@ -9,6 +9,7 @@
 
 # production
 /build
+/dist
 
 # debug
 npm-debug.log*
@@ -28,3 +29,6 @@ next-env.d.ts
 
 # redundant lock files
 package-lock.json
+
+## package files:
+*.tgz
