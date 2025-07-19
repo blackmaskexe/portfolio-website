@@ -55,8 +55,10 @@ export function WindowManager({
     iconPosition: { x: number; y: number };
     windowPosition: { x: number; y: number };
   };
-  const [openingAnimations, setOpeningAnimations] = useState<OpeningAnimation[]>([]);
-  
+  const [openingAnimations, setOpeningAnimations] = useState<
+    OpeningAnimation[]
+  >([]);
+
   // Resizing state
   const [resizeState, setResizeState] = useState<{
     windowId: string | null;
@@ -201,11 +203,11 @@ export function WindowManager({
                 <div className="w-full h-full flex flex-col">
                   {/* Simulator Title Bar */}
                   <div
-                    className="h-14 bg-gray-700 flex items-center justify-between px-4 text-white text-sm cursor-move select-none rounded-t-lg rounded-b-lg shadow-lg"
+                    className="h-12 bg-gray-700 flex items-center justify-between px-4 text-white text-sm cursor-move select-none rounded-t-lg rounded-b-lg shadow-lg"
                     onMouseDown={(e) =>
                       handleMouseDown(e, window.id, window.position)
                     }
-                    style={{ minHeight: "56px", maxHeight: "56px" }} // Force consistent height
+                    style={{ minHeight: "32px", maxHeight: "32px" }} // Force consistent height
                   >
                     <div className="flex items-center space-x-3 flex-shrink-0 w-full justify-between">
                       <div className="flex space-x-1">
@@ -309,9 +311,25 @@ export function WindowManager({
                     }
                     title="Resize"
                   >
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M2 14L14 2" stroke="#ccc" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M8 14L14 8" stroke="#ccc" strokeWidth="2" strokeLinecap="round" />
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M2 14L14 2"
+                        stroke="#ccc"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M8 14L14 8"
+                        stroke="#ccc"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
                     </svg>
                   </div>
                 </>

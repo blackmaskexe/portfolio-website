@@ -60,9 +60,18 @@ export function useSimulatorSize() {
         phoneHeight = minPhoneHeight;
       }
 
-      // Total simulator window size
-      const totalWidth = phoneWidth;
-      const totalHeight = phoneHeight + titleBarHeight + gap;
+      // If the total simulator height is greater than the viewport, scale down to fit
+      let totalWidth = phoneWidth;
+      let totalHeight = phoneHeight + titleBarHeight + gap;
+
+      if (totalHeight > viewportHeight) {
+        // Calculate scale factor to fit simulator in viewport
+        const scale = viewportHeight / totalHeight;
+        phoneWidth = phoneWidth * scale;
+        phoneHeight = phoneHeight * scale;
+        totalWidth = phoneWidth;
+        totalHeight = phoneHeight + titleBarHeight + gap;
+      }
 
       setSimulatorSize({
         width: totalWidth,

@@ -5,8 +5,14 @@ import { useState, useRef, useEffect } from "react";
 // The initial message from the AI when the chat loads.
 const initialMessages = [
   { from: "ai", text: "How may I help you to improve your habits?" },
-  { from: "user", text: "You can help me by giving me a link to this wonderful app." },
-  { from: "ai", text: "Don't worry bro, I got you! Here's the link: https://habitmentor.ai" },
+  {
+    from: "user",
+    text: "You can help me by giving me a link to this wonderful app.",
+  },
+  {
+    from: "ai",
+    text: "Don't worry bro, I got you! Here's the link: https://habitmentor.ai",
+  },
 ];
 
 export function HabitAIChat() {
@@ -26,7 +32,14 @@ export function HabitAIChat() {
     if (!trimmedInput) return;
 
     const userMessage = { from: "user", text: trimmedInput };
-    setMessages((currentMessages) => [...currentMessages, userMessage]);
+    setMessages((currentMessages) => [
+      ...currentMessages,
+      userMessage,
+      {
+        from: "ai",
+        text: "Sorry, the chat feature is only available in the app.",
+      },
+    ]);
     setInput("");
   };
 
@@ -34,16 +47,20 @@ export function HabitAIChat() {
     <div className="flex flex-col h-full bg-[#18181A]">
       {/* HEADER */}
       <div className="px-4 pt-8 pb-4">
-        <h1 className="text-lg font-bold text-white tracking-wide">AI Assistant</h1>
+        <h1 className="text-lg font-bold text-white tracking-wide">
+          AI Assistant
+        </h1>
       </div>
 
       {/* MESSAGES CONTAINER */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4">
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div className="space-y-4 max-w-md mx-auto w-full">
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex ${
+                msg.from === "user" ? "justify-end" : "justify-start"
+              }`}
             >
               <div
                 className={`px-4 py-2 rounded-2xl max-w-[80%] text-sm shadow-md ${
