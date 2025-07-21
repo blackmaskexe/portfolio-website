@@ -28,10 +28,14 @@ export function AppContent({ appId, theme = "light" }: AppContentProps) {
         </div>
       );
 
-      case "project-manager":
-        return (
-          <ProjectManagerApp />
-        )
+    case "project-manager":
+      return (
+        <div className="h-600 w-1000">
+          <div className="">
+            <ProjectManagerApp />
+          </div>
+        </div>
+      );
 
     default:
       return (

@@ -24,6 +24,7 @@ interface WindowManagerProps {
     size: { width: number; height: number }
   ) => void;
   onBringToFront: (windowId: string) => void;
+  onResizeStart?: () => void; // Optional callback for resize start
 }
 
 export function WindowManager({
@@ -34,6 +35,7 @@ export function WindowManager({
   onUpdatePosition,
   onUpdateSize,
   onBringToFront,
+  onResizeStart, // Destructure onResizeStart
 }: WindowManagerProps) {
   const simulatorSize = useSimulatorSize();
 
@@ -78,11 +80,19 @@ export function WindowManager({
     windowSize: { width: number; height: number }
   ) => {
     e.stopPropagation();
+    if (onResizeStart) {
+      onResizeStart(); // Invoke the callback to disable selection rectangle
+    }
     setResizeState({
       windowId,
       isResizing: true,
       startPos: { x: e.clientX, y: e.clientY },
       startWindowSize: windowSize,
+    });
+    // Update the isResizing property in the corresponding AppWindow
+    onUpdatePosition(windowId, {
+      x: resizeState.startPos.x,
+      y: resizeState.startPos.y,
     });
   };
 
@@ -90,23 +100,66 @@ export function WindowManager({
     if (resizeState.isResizing && resizeState.windowId) {
       const deltaX = e.clientX - resizeState.startPos.x;
       const deltaY = e.clientY - resizeState.startPos.y;
+
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      const minWidth = screenWidth * 0.4; // 40% of screen width
+      const minHeight = screenHeight * 0.6; // 60% of screen height
+
+      const newWidth = Math.max(
+        minWidth,
+        resizeState.startWindowSize.width +
+          deltaX * (resizeState.startPos.x > e.clientX ? -1 : 1)
+      );
+      const newHeight = Math.max(
+        minHeight,
+        resizeState.startWindowSize.height +
+          deltaY * (resizeState.startPos.y > e.clientY ? -1 : 1)
+      );
+
+      const newPosition = {
+        x:
+          resizeState.startPos.x > e.clientX
+            ? resizeState.startPos.x + deltaX
+            : resizeState.startPos.x,
+        y:
+          resizeState.startPos.y > e.clientY
+            ? resizeState.startPos.y + deltaY
+            : resizeState.startPos.y,
+      };
+
       onUpdateSize(resizeState.windowId, {
-        width: Math.max(300, resizeState.startWindowSize.width + deltaX),
-        height: Math.max(200, resizeState.startWindowSize.height + deltaY),
+        width: newWidth,
+        height: newHeight,
       });
+      onUpdatePosition(resizeState.windowId, newPosition);
     }
     // Also allow window dragging
     handleMouseMove(e);
   };
 
   const handleResizeMouseUp = () => {
-    setResizeState({
-      windowId: null,
-      isResizing: false,
-      startPos: { x: 0, y: 0 },
-      startWindowSize: { width: 0, height: 0 },
-    });
-    handleMouseUp();
+    if (resizeState.isResizing && resizeState.windowId) {
+      setResizeState({ ...resizeState, isResizing: false });
+      onUpdatePosition(resizeState.windowId, {
+        x: resizeState.startPos.x,
+        y: resizeState.startPos.y,
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (dragState.isDragging) {
+      setDragState({
+        windowId: null,
+        isDragging: false,
+        startPos: { x: 0, y: 0 },
+        startWindowPos: { x: 0, y: 0 },
+      });
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    }
   };
 
   const handleMouseDown = (
@@ -114,16 +167,18 @@ export function WindowManager({
     windowId: string,
     windowPos: { x: number; y: number }
   ) => {
-    onBringToFront(windowId);
+    e.stopPropagation();
     setDragState({
       windowId,
       isDragging: true,
       startPos: { x: e.clientX, y: e.clientY },
       startWindowPos: windowPos,
     });
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent) => {
     if (dragState.isDragging && dragState.windowId) {
       const deltaX = e.clientX - dragState.startPos.x;
       const deltaY = e.clientY - dragState.startPos.y;
@@ -133,15 +188,6 @@ export function WindowManager({
         y: dragState.startWindowPos.y + deltaY,
       });
     }
-  };
-
-  const handleMouseUp = () => {
-    setDragState({
-      windowId: null,
-      isDragging: false,
-      startPos: { x: 0, y: 0 },
-      startWindowPos: { x: 0, y: 0 },
-    });
   };
 
   const isIOSSimulatorApp = (appId: string) => {
@@ -185,7 +231,7 @@ export function WindowManager({
           return (
             <div
               key={window.id}
-              className={`absolute shadow-2xl overflow-hidden ${
+              className={`absolute shadow-2xl overflow-hidden window ${
                 isSimulator ? "bg-transparent" : `${windowBgClass} rounded-lg`
               }`}
               style={{
@@ -207,7 +253,7 @@ export function WindowManager({
                     onMouseDown={(e) =>
                       handleMouseDown(e, window.id, window.position)
                     }
-                    style={{ minHeight: "32px", maxHeight: "32px" }} // Force consistent height
+                    style={{ minHeight: "40px", maxHeight: "40px" }} // Force consistent height
                   >
                     <div className="flex items-center space-x-3 flex-shrink-0 w-full justify-between">
                       <div className="flex space-x-1">
@@ -299,38 +345,6 @@ export function WindowManager({
                   {/* Window Content */}
                   <div className="flex-1 overflow-hidden">
                     <AppContent appId={window.appId} theme={theme} />
-                  </div>
-                  {/* Resize Handle */}
-                  <div
-                    className="absolute bottom-2 right-2 w-5 h-5 bg-gray-700 rounded cursor-nwse-resize flex items-center justify-center z-50"
-                    style={{
-                      userSelect: "none",
-                    }}
-                    onMouseDown={(e) =>
-                      handleResizeMouseDown(e, window.id, window.size)
-                    }
-                    title="Resize"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M2 14L14 2"
-                        stroke="#ccc"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                      <path
-                        d="M8 14L14 8"
-                        stroke="#ccc"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
                   </div>
                 </>
               )}
