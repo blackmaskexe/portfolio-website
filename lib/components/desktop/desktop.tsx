@@ -58,9 +58,6 @@ export function Desktop({ theme = "light" }: DesktopProps) {
   const [showControlCenter, setShowControlCenter] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  const [isSelecting, setIsSelecting] = useState(false);
-  const [selectionStart, setSelectionStart] = useState({ x: 0, y: 0 });
-  const [selectionEnd, setSelectionEnd] = useState({ x: 0, y: 0 });
   const desktopRef = useRef<HTMLDivElement>(null);
 
   // Empty desktop icons array - no icons on desktop
@@ -74,7 +71,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
   }, []);
 
   const openApp = (appId: string) => {
-    const appConfig = showcaseAppIds.find(app => app.id === appId);
+    const appConfig = showcaseAppIds.find((app) => app.id === appId);
     if (!appConfig) return;
     const { title, isIosSimulator } = appConfig;
     const existingWindow = openWindows.find(
@@ -131,15 +128,6 @@ export function Desktop({ theme = "light" }: DesktopProps) {
     );
   };
 
-  const updateWindowPosition = (
-    windowId: string,
-    position: { x: number; y: number }
-  ) => {
-    setOpenWindows((prev) =>
-      prev.map((w) => (w.id === windowId ? { ...w, position } : w))
-    );
-  };
-
   const updateWindowSize = (
     windowId: string,
     size: { width: number; height: number }
@@ -159,54 +147,10 @@ export function Desktop({ theme = "light" }: DesktopProps) {
     );
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    // Check if we're clicking on an interactive element or window dragging area
-    const target = e.target as HTMLElement;
-    const isInteractiveElement =
-      target.closest("button") ||
-      target.closest('[role="button"]') ||
-      target.closest(".window") ||
-      target.closest(".dock") ||
-      target.closest(".menu-bar") ||
-      target.closest(".cursor-move") ||
-      target.classList.contains("cursor-move");
-
-    // Only start selection if NOT clicking on interactive elements
-    if (!isInteractiveElement) {
-      setIsSelecting(true);
-      setSelectionStart({ x: e.clientX, y: e.clientY });
-      setSelectionEnd({ x: e.clientX, y: e.clientY });
-
-      // Add global mouse event listeners for dragging
-      const handleGlobalMouseMove = (e: MouseEvent) => {
-        setSelectionEnd({ x: e.clientX, y: e.clientY });
-      };
-
-      const handleGlobalMouseUp = () => {
-        setIsSelecting(false);
-        document.removeEventListener("mousemove", handleGlobalMouseMove);
-        document.removeEventListener("mouseup", handleGlobalMouseUp);
-      };
-
-      document.addEventListener("mousemove", handleGlobalMouseMove);
-      document.addEventListener("mouseup", handleGlobalMouseUp);
-    }
-  };
-
-  // Calculate selection rectangle properties
-  const getSelectionRect = () => {
-    const left = Math.min(selectionStart.x, selectionEnd.x);
-    const top = Math.min(selectionStart.y, selectionEnd.y);
-    const width = Math.abs(selectionEnd.x - selectionStart.x);
-    const height = Math.abs(selectionEnd.y - selectionStart.y);
-    return { left, top, width, height };
-  };
-
   return (
     <div
       ref={desktopRef}
       className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800"
-      onMouseDown={handleMouseDown}
     >
       {/* Desktop Background */}
       <div
@@ -216,22 +160,8 @@ export function Desktop({ theme = "light" }: DesktopProps) {
         }}
       />
 
-      {/* Selection Rectangle */}
-      {isSelecting && (
-        <div
-          className="absolute border-2 border-blue-500 bg-blue-500/30 pointer-events-none z-50"
-          style={{
-            left: getSelectionRect().left,
-            top: getSelectionRect().top,
-            width: getSelectionRect().width,
-            height: getSelectionRect().height,
-            boxShadow: "0 0 10px rgba(59, 130, 246, 0.5)",
-          }}
-        />
-      )}
-
       {/* Desktop Icons - now empty */}
-      <DesktopIcons icons={desktopIcons} onOpenApp={id => openApp(id)} />
+      <DesktopIcons icons={desktopIcons} onOpenApp={(id) => openApp(id)} />
 
       {/* Menu Bar */}
       <MenuBar
@@ -253,7 +183,6 @@ export function Desktop({ theme = "light" }: DesktopProps) {
         theme={theme}
         onClose={closeWindow}
         onMinimize={minimizeWindow}
-        onUpdatePosition={updateWindowPosition}
         onUpdateSize={updateWindowSize}
         onBringToFront={bringToFront}
       />
@@ -261,7 +190,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
       {/* Dock */}
       <Dock
         openWindows={openWindows}
-        onOpenApp={id => openApp(id)}
+        onOpenApp={(id) => openApp(id)}
         onRestoreWindow={restoreWindow}
       />
     </div>

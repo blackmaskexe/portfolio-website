@@ -6,7 +6,6 @@ import { useState } from "react";
 import { X, Minus, Square } from "lucide-react";
 import type { AppWindow } from "../desktop";
 import { AppContent } from "./app-content";
-import { AppOpeningAnimation } from "./app-opening-animation";
 import { IOSSimulatorWindow } from "../ios-simulator";
 import { useSimulatorSize } from "../../hooks/use-simulator-size";
 
@@ -15,16 +14,11 @@ interface WindowManagerProps {
   theme?: "light" | "dark";
   onClose: (windowId: string) => void;
   onMinimize: (windowId: string) => void;
-  onUpdatePosition: (
-    windowId: string,
-    position: { x: number; y: number }
-  ) => void;
   onUpdateSize: (
     windowId: string,
     size: { width: number; height: number }
   ) => void;
   onBringToFront: (windowId: string) => void;
-  onResizeStart?: () => void; // Optional callback for resize start
 }
 
 export function WindowManager({
@@ -32,36 +26,11 @@ export function WindowManager({
   theme = "light",
   onClose,
   onMinimize,
-  onUpdatePosition,
   onUpdateSize,
   onBringToFront,
-  onResizeStart, // Destructure onResizeStart
 }: WindowManagerProps) {
   const simulatorSize = useSimulatorSize();
 
-  const [dragState, setDragState] = useState<{
-    windowId: string | null;
-    isDragging: boolean;
-    startPos: { x: number; y: number };
-    startWindowPos: { x: number; y: number };
-  }>({
-    windowId: null,
-    isDragging: false,
-    startPos: { x: 0, y: 0 },
-    startWindowPos: { x: 0, y: 0 },
-  });
-
-  type OpeningAnimation = {
-    appId: string;
-    appName: string;
-    iconPosition: { x: number; y: number };
-    windowPosition: { x: number; y: number };
-  };
-  const [openingAnimations, setOpeningAnimations] = useState<
-    OpeningAnimation[]
-  >([]);
-
-  // Resizing state
   const [resizeState, setResizeState] = useState<{
     windowId: string | null;
     isResizing: boolean;
@@ -73,26 +42,18 @@ export function WindowManager({
     startPos: { x: 0, y: 0 },
     startWindowSize: { width: 0, height: 0 },
   });
-  // Resize mouse events
+
   const handleResizeMouseDown = (
     e: React.MouseEvent,
     windowId: string,
     windowSize: { width: number; height: number }
   ) => {
     e.stopPropagation();
-    if (onResizeStart) {
-      onResizeStart(); // Invoke the callback to disable selection rectangle
-    }
     setResizeState({
       windowId,
       isResizing: true,
       startPos: { x: e.clientX, y: e.clientY },
       startWindowSize: windowSize,
-    });
-    // Update the isResizing property in the corresponding AppWindow
-    onUpdatePosition(windowId, {
-      x: resizeState.startPos.x,
-      y: resizeState.startPos.y,
     });
   };
 
@@ -100,94 +61,20 @@ export function WindowManager({
     if (resizeState.isResizing && resizeState.windowId) {
       const deltaX = e.clientX - resizeState.startPos.x;
       const deltaY = e.clientY - resizeState.startPos.y;
-
-      const screenWidth = window.innerWidth;
-      const screenHeight = window.innerHeight;
-
-      const minWidth = screenWidth * 0.4; // 40% of screen width
-      const minHeight = screenHeight * 0.6; // 60% of screen height
-
-      const newWidth = Math.max(
-        minWidth,
-        resizeState.startWindowSize.width +
-          deltaX * (resizeState.startPos.x > e.clientX ? -1 : 1)
-      );
-      const newHeight = Math.max(
-        minHeight,
-        resizeState.startWindowSize.height +
-          deltaY * (resizeState.startPos.y > e.clientY ? -1 : 1)
-      );
-
-      const newPosition = {
-        x:
-          resizeState.startPos.x > e.clientX
-            ? resizeState.startPos.x + deltaX
-            : resizeState.startPos.x,
-        y:
-          resizeState.startPos.y > e.clientY
-            ? resizeState.startPos.y + deltaY
-            : resizeState.startPos.y,
-      };
-
       onUpdateSize(resizeState.windowId, {
-        width: newWidth,
-        height: newHeight,
+        width: Math.max(300, resizeState.startWindowSize.width + deltaX),
+        height: Math.max(200, resizeState.startWindowSize.height + deltaY),
       });
-      onUpdatePosition(resizeState.windowId, newPosition);
     }
-    // Also allow window dragging
-    handleMouseMove(e);
   };
 
   const handleResizeMouseUp = () => {
-    if (resizeState.isResizing && resizeState.windowId) {
-      setResizeState({ ...resizeState, isResizing: false });
-      onUpdatePosition(resizeState.windowId, {
-        x: resizeState.startPos.x,
-        y: resizeState.startPos.y,
-      });
-    }
-  };
-
-  const handleMouseUp = () => {
-    if (dragState.isDragging) {
-      setDragState({
-        windowId: null,
-        isDragging: false,
-        startPos: { x: 0, y: 0 },
-        startWindowPos: { x: 0, y: 0 },
-      });
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    }
-  };
-
-  const handleMouseDown = (
-    e: React.MouseEvent,
-    windowId: string,
-    windowPos: { x: number; y: number }
-  ) => {
-    e.stopPropagation();
-    setDragState({
-      windowId,
-      isDragging: true,
-      startPos: { x: e.clientX, y: e.clientY },
-      startWindowPos: windowPos,
+    setResizeState({
+      windowId: null,
+      isResizing: false,
+      startPos: { x: 0, y: 0 },
+      startWindowSize: { width: 0, height: 0 },
     });
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (dragState.isDragging && dragState.windowId) {
-      const deltaX = e.clientX - dragState.startPos.x;
-      const deltaY = e.clientY - dragState.startPos.y;
-
-      onUpdatePosition(dragState.windowId, {
-        x: dragState.startWindowPos.x + deltaX,
-        y: dragState.startWindowPos.y + deltaY,
-      });
-    }
   };
 
   const isIOSSimulatorApp = (appId: string) => {
@@ -209,25 +96,11 @@ export function WindowManager({
       onMouseMove={handleResizeMouseMove}
       onMouseUp={handleResizeMouseUp}
     >
-      {/* Opening Animations */}
-      {openingAnimations.map((animation, index) => (
-        <AppOpeningAnimation
-          key={`${animation.appId}-${index}`}
-          appId={animation.appId}
-          appName={animation.appName}
-          iconPosition={animation.iconPosition}
-          windowPosition={animation.windowPosition}
-          onComplete={() => {
-            setOpeningAnimations((prev) => prev.filter((_, i) => i !== index));
-          }}
-        />
-      ))}
       {windows
         .filter((w) => !w.isMinimized)
         .sort((a, b) => a.zIndex - b.zIndex)
         .map((window) => {
           const isSimulator = isIOSSimulatorApp(window.appId);
-          // Only add resize handle for non-simulator windows
           return (
             <div
               key={window.id}
@@ -240,20 +113,14 @@ export function WindowManager({
                 width: isSimulator ? simulatorSize.width : window.size.width,
                 height: isSimulator ? simulatorSize.height : window.size.height,
                 zIndex: window.zIndex,
-                userSelect: resizeState.isResizing ? "none" : undefined,
               }}
               onClick={() => onBringToFront(window.id)}
             >
               {isSimulator ? (
-                // iOS Simulator Window with title bar above
                 <div className="w-full h-full flex flex-col">
-                  {/* Simulator Title Bar */}
                   <div
-                    className="h-12 bg-gray-700 flex items-center justify-between px-4 text-white text-sm cursor-move select-none rounded-t-lg rounded-b-lg shadow-lg"
-                    onMouseDown={(e) =>
-                      handleMouseDown(e, window.id, window.position)
-                    }
-                    style={{ minHeight: "40px", maxHeight: "40px" }} // Force consistent height
+                    className="h-12 bg-gray-700 flex items-center justify-between px-4 text-white text-sm select-none rounded-t-lg rounded-b-lg shadow-lg"
+                    style={{ minHeight: "40px", maxHeight: "40px" }}
                   >
                     <div className="flex items-center space-x-3 flex-shrink-0 w-full justify-between">
                       <div className="flex space-x-1">
@@ -288,7 +155,6 @@ export function WindowManager({
                     </div>
                   </div>
 
-                  {/* Phone Simulator Area (transparent padding maintained) */}
                   <div className="flex-1 relative bg-transparent pt-2">
                     <div
                       style={{
@@ -304,14 +170,9 @@ export function WindowManager({
                   </div>
                 </div>
               ) : (
-                // Regular macOS Window
                 <>
-                  {/* Title Bar */}
                   <div
-                    className={`h-8 ${titleBarBgClass} border-b flex items-center justify-between px-4 cursor-move select-none window-titlebar`}
-                    onMouseDown={(e) =>
-                      handleMouseDown(e, window.id, window.position)
-                    }
+                    className={`h-8 ${titleBarBgClass} border-b flex items-center justify-between px-4 select-none window-titlebar`}
                   >
                     <div className="flex items-center space-x-2">
                       <button
@@ -342,7 +203,6 @@ export function WindowManager({
                     <div className="w-12" />
                   </div>
 
-                  {/* Window Content */}
                   <div className="flex-1 overflow-hidden">
                     <AppContent appId={window.appId} theme={theme} />
                   </div>
