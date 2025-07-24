@@ -30,8 +30,9 @@ export function AppContent({ appId, theme = "light" }: AppContentProps) {
 
     case "project-manager":
       return (
-        <div className="h-full w-full">
-          <div className="">
+        <div className="h-[70vh]">
+          {/* Reduce height to 70% of viewport */}
+          <div className="h-full w-full">
             <ProjectManagerApp />
           </div>
         </div>

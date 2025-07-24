@@ -145,6 +145,7 @@ export function WindowManager({
   return (
     <div
       className="absolute inset-0 pt-6 pointer-events-auto"
+      style={{ overflow: "visible" }} // Adjust overflow to prevent clipping
       onMouseMove={(e) => {
         handleResizeMouseMove(e);
         handleDragMouseMove(e);
@@ -162,14 +163,14 @@ export function WindowManager({
           return (
             <div
               key={window.id}
-              className={`absolute shadow-2xl overflow-hidden window ${
+              className={`absolute shadow-2xl overflow-visible window ${
                 isSimulator ? "bg-transparent" : `${windowBgClass} rounded-lg`
               }`}
               style={{
                 left: window.position.x,
                 top: window.position.y,
-                width: isSimulator ? simulatorSize.width : window.size.width,
-                height: isSimulator ? simulatorSize.height : window.size.height,
+                width: isSimulator ? simulatorSize.width : "70vw", // Default width for non-iOS simulator windows
+                height: isSimulator ? simulatorSize.height : "70vh", // Default height for non-iOS simulator windows
                 zIndex: window.zIndex,
               }}
               onClick={() => onBringToFront(window.id)}
