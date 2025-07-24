@@ -18,6 +18,10 @@ interface WindowManagerProps {
     windowId: string,
     size: { width: number; height: number }
   ) => void;
+  onUpdatePosition: (
+    windowId: string,
+    position: { x: number; y: number }
+  ) => void;
   onBringToFront: (windowId: string) => void;
 }
 
@@ -27,6 +31,7 @@ export function WindowManager({
   onClose,
   onMinimize,
   onUpdateSize,
+  onUpdatePosition,
   onBringToFront,
 }: WindowManagerProps) {
   const simulatorSize = useSimulatorSize();
@@ -41,6 +46,18 @@ export function WindowManager({
     isResizing: false,
     startPos: { x: 0, y: 0 },
     startWindowSize: { width: 0, height: 0 },
+  });
+
+  const [dragState, setDragState] = useState<{
+    windowId: string | null;
+    isDragging: boolean;
+    startPos: { x: number; y: number };
+    startWindowPos: { x: number; y: number };
+  }>({
+    windowId: null,
+    isDragging: false,
+    startPos: { x: 0, y: 0 },
+    startWindowPos: { x: 0, y: 0 },
   });
 
   const handleResizeMouseDown = (
@@ -77,6 +94,41 @@ export function WindowManager({
     });
   };
 
+  const handleDragMouseDown = (
+    e: React.MouseEvent,
+    windowId: string,
+    windowPos: { x: number; y: number }
+  ) => {
+    e.stopPropagation();
+    setDragState({
+      windowId,
+      isDragging: true,
+      startPos: { x: e.clientX, y: e.clientY },
+      startWindowPos: windowPos,
+    });
+  };
+
+  const handleDragMouseMove = (e: React.MouseEvent) => {
+    if (dragState.isDragging && dragState.windowId) {
+      const deltaX = e.clientX - dragState.startPos.x;
+      const deltaY = e.clientY - dragState.startPos.y;
+      onBringToFront(dragState.windowId);
+      onUpdatePosition(dragState.windowId, {
+        x: dragState.startWindowPos.x + deltaX,
+        y: dragState.startWindowPos.y + deltaY,
+      });
+    }
+  };
+
+  const handleDragMouseUp = () => {
+    setDragState({
+      windowId: null,
+      isDragging: false,
+      startPos: { x: 0, y: 0 },
+      startWindowPos: { x: 0, y: 0 },
+    });
+  };
+
   const isIOSSimulatorApp = (appId: string) => {
     const result = appId === "gains-chat" || appId === "habitmentor-ai";
     console.log(`isIOSSimulatorApp check: "${appId}" => ${result}`); // Debug log
@@ -93,8 +145,14 @@ export function WindowManager({
   return (
     <div
       className="absolute inset-0 pt-6 pointer-events-auto"
-      onMouseMove={handleResizeMouseMove}
-      onMouseUp={handleResizeMouseUp}
+      onMouseMove={(e) => {
+        handleResizeMouseMove(e);
+        handleDragMouseMove(e);
+      }}
+      onMouseUp={() => {
+        handleResizeMouseUp();
+        handleDragMouseUp();
+      }}
     >
       {windows
         .filter((w) => !w.isMinimized)
@@ -120,7 +178,13 @@ export function WindowManager({
                 <div className="w-full h-full flex flex-col">
                   <div
                     className="h-12 bg-gray-700 flex items-center justify-between px-4 text-white text-sm select-none rounded-t-lg rounded-b-lg shadow-lg"
-                    style={{ minHeight: "40px", maxHeight: "40px" }}
+                    style={{ minHeight: "40px", maxHeight: "40px", cursor: "grab" }}
+                    onMouseDown={(e) =>
+                      handleDragMouseDown(e, window.id, {
+                        x: window.position.x,
+                        y: window.position.y,
+                      })
+                    }
                   >
                     <div className="flex items-center space-x-3 flex-shrink-0 w-full justify-between">
                       <div className="flex space-x-1">
@@ -173,6 +237,13 @@ export function WindowManager({
                 <>
                   <div
                     className={`h-8 ${titleBarBgClass} border-b flex items-center justify-between px-4 select-none window-titlebar`}
+                    onMouseDown={(e) =>
+                      handleDragMouseDown(e, window.id, {
+                        x: window.position.x,
+                        y: window.position.y,
+                      })
+                    }
+                    style={{ cursor: "grab" }}
                   >
                     <div className="flex items-center space-x-2">
                       <button

@@ -137,6 +137,15 @@ export function Desktop({ theme = "light" }: DesktopProps) {
     );
   };
 
+  const updateWindowPosition = (
+    windowId: string,
+    position: { x: number; y: number }
+  ) => {
+    setOpenWindows((prev) =>
+      prev.map((w) => (w.id === windowId ? { ...w, position } : w))
+    );
+  };
+
   const bringToFront = (windowId: string) => {
     setOpenWindows((prev) =>
       prev.map((w) =>
@@ -184,6 +193,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
         onClose={closeWindow}
         onMinimize={minimizeWindow}
         onUpdateSize={updateWindowSize}
+        onUpdatePosition={updateWindowPosition}
         onBringToFront={bringToFront}
       />
 
