@@ -160,6 +160,10 @@ export function Desktop({ theme = "light" }: DesktopProps) {
     <div
       ref={desktopRef}
       className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800"
+      style={{
+        position: "relative", // Ensure proper stacking context
+        overflow: "hidden", // Prevent layout shifts
+      }}
     >
       {/* Desktop Background */}
       <div

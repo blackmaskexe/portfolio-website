@@ -178,7 +178,11 @@ export function WindowManager({
                 <div className="w-full h-full flex flex-col">
                   <div
                     className="h-12 bg-gray-700 flex items-center justify-between px-4 text-white text-sm select-none rounded-t-lg rounded-b-lg shadow-lg"
-                    style={{ minHeight: "40px", maxHeight: "40px", cursor: "grab" }}
+                    style={{
+                      minHeight: "40px",
+                      maxHeight: "40px",
+                      cursor: "grab",
+                    }}
                     onMouseDown={(e) =>
                       handleDragMouseDown(e, window.id, {
                         x: window.position.x,

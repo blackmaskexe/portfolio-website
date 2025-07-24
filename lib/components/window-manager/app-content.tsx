@@ -30,7 +30,7 @@ export function AppContent({ appId, theme = "light" }: AppContentProps) {
 
     case "project-manager":
       return (
-        <div className="h-600 w-1000">
+        <div className="h-full w-full">
           <div className="">
             <ProjectManagerApp />
           </div>

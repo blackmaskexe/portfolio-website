@@ -6,7 +6,7 @@ import type { AppWindow } from "../desktop";
 
 import habitTrackerLogo from "../../assets/app-icons/habitmentor-ai.png";
 import motivationAppLogo from "../../assets/app-icons/gains-chat.png";
-import projectManagerLogo from '../../assets/app-icons/project-manager.png';
+import projectManagerLogo from "../../assets/app-icons/project-manager.png";
 
 console.log(
   "cassey's been waiting too long",
@@ -36,7 +36,6 @@ const dockApps = [
     name: "Project Manager (React)",
     iconPath: projectManagerLogo.src || projectManagerLogo,
   },
- 
 ];
 
 export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
@@ -62,7 +61,7 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
   };
 
   return (
-    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 z-40">
+    <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2 z-[2147483647]">
       <div className="bg-white/20 backdrop-blur-md rounded-2xl px-3 py-2 border border-white/20">
         <div className="flex items-center space-x-1">
           {/* Regular Apps */}
