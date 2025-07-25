@@ -38,7 +38,7 @@ const showcaseAppIds = [
   },
   {
     id: "project-manager",
-    title: "Project Manager",
+    title: "Safari", // because it is being shown on a safari style window
     isIosSimulator: false,
   },
   {

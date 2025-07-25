@@ -13,7 +13,6 @@ export default function ProjectManagerApp() {
         sandbox={[] /* Remove sandbox restrictions for testing */}
         className="my-iframe"
         styles={{
-          border: "1px solid #ccc",
           display: "block", // Ensure iframe is a block element
           height: "100%", // Use parent container's height
           width: "100%", // Use parent container's width

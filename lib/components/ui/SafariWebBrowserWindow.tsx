@@ -1,4 +1,7 @@
+"use client";
+
 import React, { useState } from "react";
+import { FiRefreshCw, FiExternalLink } from "react-icons/fi";
 
 interface SafariWebBrowserWindowProps {
   url: string;
@@ -26,7 +29,7 @@ export default function SafariWebBrowserWindow({
             type="text"
             value={url}
             readOnly
-            className="w-full px-3 py-1 text-sm border rounded bg-gray-700 text-gray-300 cursor-default"
+            className="w-full px-3 py-1 text-sm rounded bg-gray-700 text-gray-300 cursor-default "
           />
         </div>
         <div className="flex items-center space-x-2">
@@ -34,7 +37,13 @@ export default function SafariWebBrowserWindow({
             className="text-gray-400 hover:text-gray-200"
             onClick={() => setIframeKey((prevKey) => prevKey + 1)} // Reload iframe
           >
-            Reload
+            <FiRefreshCw className="w-5 h-5" />
+          </button>
+          <button
+            className="text-gray-400 hover:text-gray-200"
+            onClick={() => window.open(url, "_blank")} // Open website in new tab
+          >
+            <FiExternalLink className="w-5 h-5" />
           </button>
         </div>
       </div>
