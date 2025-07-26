@@ -16,16 +16,15 @@ export function HabitMentorAIApp() {
       style={{ background: "#151515" }}
     >
       {/* Status Bar */}
-      <div className="flex justify-between items-center px-6 pt-3 pb-2 text-white text-sm font-medium">
+      <div className="relative flex justify-between items-center px-6 pt-3 pb-2 text-white text-sm font-medium">
         <span>{currentTime}</span>
+        {/* Dynamic Island - Centered in status bar */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-6 bg-black rounded-full z-30" />
         <div className="flex items-center space-x-1">
           <Wifi className="w-4 h-4" />
           <Battery className="w-6 h-3" />
         </div>
       </div>
-
-      {/* Dynamic Island */}
-      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-32 h-6 bg-black rounded-full" />
 
       {/* Main Content */}
       <div className="flex-1 w-full pt-0 px-0 flex flex-col min-h-0">
@@ -35,14 +34,18 @@ export function HabitMentorAIApp() {
       {/* Bottom Tabs: now always visible, part of flex layout */}
       <div className="w-full bg-[#18181A] border-t border-[#232325] flex justify-around items-center h-16 z-20">
         <button
-          className={`flex flex-col items-center justify-center flex-1 h-full pb-2 ${activeTab === "home" ? "text-[#FF6347]" : "text-white/60"}`}
+          className={`flex flex-col items-center justify-center flex-1 h-full pb-2 ${
+            activeTab === "home" ? "text-[#FF6347]" : "text-white/60"
+          }`}
           onClick={() => setActiveTab("home")}
         >
           <IoHomeOutline size={26} />
           <span className="text-xs mt-1 font-medium">Home</span>
         </button>
         <button
-          className={`flex flex-col items-center justify-center flex-1 h-full pb-2 ${activeTab === "ai" ? "text-[#FF6347]" : "text-white/60"}`}
+          className={`flex flex-col items-center justify-center flex-1 h-full pb-2 ${
+            activeTab === "ai" ? "text-[#FF6347]" : "text-white/60"
+          }`}
           onClick={() => setActiveTab("ai")}
         >
           <IoChatbubbleEllipsesOutline size={26} />

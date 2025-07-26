@@ -1,6 +1,6 @@
 {
   "name": "react-macos-desktop",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": false,
   "description": "a macos-simulator component that can be used to display applications that open up either as macos application windows or ios simulator window in macos. Useful for showcasing projects, etc in your portfolios",
   "author": "blackmaskexe",

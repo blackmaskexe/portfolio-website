@@ -111,13 +111,13 @@ export function GainsChatApp() {
   return (
     <div className="w-full h-full bg-gray-50 text-gray-900 relative font-sans">
       {/* Status Bar & Notch */}
-      <div className="absolute top-0 left-0 right-0 z-20 px-6 pt-4 flex justify-between items-center">
+      <div className="relative top-0 left-0 right-0 z-20 px-6 pt-4 pb-2 flex justify-between items-center">
         <span className="text-sm font-semibold">{currentTime}</span>
-        <div className="absolute left-1/2 -translate-x-1/2 w-28 h-7 bg-black rounded-full" />
+        {/* Dynamic Island - Centered in status bar */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-28 h-7 bg-black rounded-full z-30" />
         <div className="flex items-center space-x-1.5">
           <Wifi size={16} />
           <div className="flex items-center">
-            <span className="text-xs mr-1">68</span>
             <Battery className="w-6 h-3" />
           </div>
         </div>
