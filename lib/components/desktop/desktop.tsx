@@ -159,7 +159,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
   return (
     <div
       ref={desktopRef}
-      className="h-screen w-screen overflow-hidden relative bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800"
+      className="h-screen w-screen overflow-hidden flex flex-col bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800"
       style={{
         position: "relative", // Ensure proper stacking context
         overflow: "hidden", // Prevent layout shifts
@@ -190,18 +190,21 @@ export function Desktop({ theme = "light" }: DesktopProps) {
         />
       )}
 
-      {/* Window Manager */}
-      <WindowManager
-        windows={openWindows}
-        theme={theme}
-        onClose={closeWindow}
-        onMinimize={minimizeWindow}
-        onUpdateSize={updateWindowSize}
-        onUpdatePosition={updateWindowPosition}
-        onBringToFront={bringToFront}
-      />
+      {/* Main content area - flex-1 to take remaining space */}
+      <div className="flex-1 relative">
+        {/* Window Manager */}
+        <WindowManager
+          windows={openWindows}
+          theme={theme}
+          onClose={closeWindow}
+          onMinimize={minimizeWindow}
+          onUpdateSize={updateWindowSize}
+          onUpdatePosition={updateWindowPosition}
+          onBringToFront={bringToFront}
+        />
+      </div>
 
-      {/* Dock */}
+      {/* Dock - at the bottom */}
       <Dock
         openWindows={openWindows}
         onOpenApp={(id) => openApp(id)}

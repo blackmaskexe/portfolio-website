@@ -61,7 +61,7 @@ export function Dock({ openWindows, onOpenApp, onRestoreWindow }: DockProps) {
   };
 
   return (
-    <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2 z-[2147483647]">
+    <div className="flex justify-center items-end min-h-0 pb-2 z-[2147483647]">
       <div className="bg-white/20 backdrop-blur-md rounded-2xl px-3 py-2 border border-white/20">
         <div className="flex items-center space-x-1">
           {/* Regular Apps */}
