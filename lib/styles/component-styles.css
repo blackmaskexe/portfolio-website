@@ -1,0 +1,106 @@
+/* Base Tailwind imports */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom component styles for react-macos-desktop */
+@layer components {
+  .desktop-background {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .window-shadow {
+    box-shadow: 
+      0 25px 50px -12px rgba(0, 0, 0, 0.25),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+  
+  .dock-blur {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  .macos-window {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .macos-window-header {
+    height: 28px;
+    background: linear-gradient(180deg, #f6f6f6 0%, #e8e8e8 100%);
+    border-bottom: 1px solid #d1d1d1;
+  }
+  
+  .macos-window-header.dark {
+    background: linear-gradient(180deg, #2c2c2c 0%, #1e1e1e 100%);
+    border-bottom: 1px solid #404040;
+  }
+  
+  .window-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    height: 100%;
+  }
+  
+  .window-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .window-control.close {
+    background: #ff5f57;
+  }
+  
+  .window-control.minimize {
+    background: #ffbd2e;
+  }
+  
+  .window-control.maximize {
+    background: #28ca42;
+  }
+  
+  .ios-simulator-frame {
+    border-radius: 22px;
+    border: 8px solid #1f1f1f;
+    background: #000;
+  }
+  
+  .ios-simulator-screen {
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  
+  .dock-item {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .dock-item:hover {
+    transform: translateY(-4px) scale(1.1);
+  }
+  
+  .menu-bar-blur {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.8);
+  }
+  
+  .menu-bar-blur.dark {
+    background: rgba(30, 30, 30, 0.8);
+  }
+  
+  .control-center-blur {
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    background: rgba(255, 255, 255, 0.9);
+  }
+  
+  .control-center-blur.dark {
+    background: rgba(30, 30, 30, 0.9);
+  }
+}
