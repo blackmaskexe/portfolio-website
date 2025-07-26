@@ -1,6 +1,6 @@
 {
   "name": "react-macos-desktop",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "private": false,
   "description": "a macos-simulator component that can be used to display applications that open up either as macos application windows or ios simulator window in macos. Useful for showcasing projects, etc in your portfolios",
   "author": "blackmaskexe",
@@ -20,7 +20,7 @@
     "build-app": "next build",
     "start": "next start",
     "lint": "next lint",
-    "build": "rm -rf dist && npm run build:css && tsc --project tsconfig.build.json && babel lib --out-dir dist --copy-files --config-file ./babel.config.lib.json --extensions \".ts,.tsx,.js,.jsx\"",
+    "build": "rm -rf dist && tsc --project tsconfig.build.json && babel lib --out-dir dist --ignore 'lib/styles/*.css' --copy-files --config-file ./babel.config.lib.json --extensions \".ts,.tsx,.js,.jsx\" && npm run build:css",
     "build:css": "tailwindcss -c tailwind.config.lib.js -i lib/styles/component-styles.css -o dist/styles.css --minify",
     "test-package": "node test-package-structure.js",
     "test-final": "node test-package-final.js",

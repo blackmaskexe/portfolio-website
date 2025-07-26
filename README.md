@@ -55,8 +55,8 @@ function App() {
 // tailwind.config.js
 module.exports = {
   content: [
-    './src/**/*.{js,ts,jsx,tsx}',
-    './node_modules/react-macos-desktop/dist/**/*.{js,ts,jsx,tsx}',
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/react-macos-desktop/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -91,7 +91,7 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+};
 ```
 
 ### 3. CSS Imports
@@ -100,7 +100,7 @@ Import the component styles in your main CSS file:
 
 ```css
 /* globals.css or main.css */
-@import 'react-macos-desktop/dist/styles.css';
+@import "react-macos-desktop/dist/styles.css";
 
 /* Add CSS variables for theming */
 :root {
