@@ -159,7 +159,7 @@ export function Desktop({ theme = "light" }: DesktopProps) {
   return (
     <div
       ref={desktopRef}
-      className="h-screen w-screen overflow-hidden flex flex-col bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800"
+      className="h-full w-full overflow-hidden flex flex-col bg-gradient-to-br from-purple-900 via-purple-600 to-pink-800"
       style={{
         position: "relative", // Ensure proper stacking context
         overflow: "hidden", // Prevent layout shifts
